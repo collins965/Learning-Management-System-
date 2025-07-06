@@ -1,0 +1,51 @@
+<nav class="shadow-md" style="background-color: var(--navbar-color); color: var(--navbar-text-color);">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16 items-center">
+
+      <!-- Logo -->
+      <div class="flex-shrink-0">
+        <a href="{% url 'home' %}" class="text-2xl font-bold" style="color: var(--accent-color);">LMS</a>
+      </div>
+
+      <!-- Links -->
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="{% url 'home' %}" class="font-medium hover:underline" style="color: var(--navbar-text-color);">Home</a>
+
+        {% if user.is_authenticated %}
+          <a href="{% url 'dashboard' %}" class="font-medium hover:underline" style="color: var(--navbar-text-color);">Dashboard</a>
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="font-medium hover:underline" style="color: red;">
+              Logout
+            </button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" class="font-medium hover:underline" style="color: var(--navbar-text-color);">Login</a>
+          <a href="{% url 'register' %}" class="font-medium hover:underline" style="color: var(--accent-color);">Register</a>
+        {% endif %}
+
+        <!-- Theme Selector Dropdown -->
+        <select id="theme-selector"
+                class="text-sm px-2 py-1 rounded-md focus:outline-none border border-gray-300"
+                style="background-color: var(--card-color); color: var(--text-color);">
+          <option value="light">🌕 Light</option>
+          <option value="dark">🌑 Dark</option>
+          <option value="pink">🌸 Pink</option>
+          <option value="purple">🟣 Purple</option>
+          <option value="lavender">🌾 Lavender</option>
+          <option value="ocean">🌊 Ocean</option>
+          <option value="frost">❄️ Frost</option>
+          <option value="earth">🌱 Earth</option>
+          <option value="sunset">🌇 Sunset</option>
+          <option value="slate">🪨 Slate</option>
+          <option value="cyber">💿 Cyber</option>
+        </select>
+      </div>
+
+      <!-- Mobile toggle (optional) -->
+      <div class="md:hidden">
+        <!-- Add hamburger menu here if needed -->
+      </div>
+    </div>
+  </div>
+</nav>

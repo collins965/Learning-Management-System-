@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" id="html-root" data-theme="light" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}LMS{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Theme CSS -->
+  <link rel="stylesheet" href="{% static 'core/theme.css' %}">
+</head>
+
+<body style="background-color: var(--bg-color); color: var(--text-color);"
+      class="transition-colors duration-300 min-h-screen flex flex-col">
+
+  {% include 'navbar.html' %}
+
+  <!-- Main content takes full remaining height -->
+  <main class="flex-grow container mx-auto p-4">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include 'footer.html' %}
+
+  <script>
+    const htmlRoot = document.getElementById('html-root');
+    const selector = document.getElementById('theme-selector');
+    const icon = document.getElementById('theme-icon');
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    htmlRoot.dataset.theme = savedTheme;
+    if (selector) selector.value = savedTheme;
+    if (icon) icon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    selector?.addEventListener('change', (e) => {
+      const newTheme = e.target.value;
+      htmlRoot.dataset.theme = newTheme;
+      localStorage.setItem('theme', newTheme);
+      if (icon) icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<footer class="py-6 mt-12 shadow-inner transition-colors duration-300"
+        style="background-color: var(--navbar-color); color: var(--navbar-text-color);">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+
+    <!-- Left section -->
+    <div class="text-center md:text-left">
+      <h3 class="text-lg font-semibold" style="color: var(--accent-color);">LMS Project</h3>
+      <p class="text-sm" style="color: var(--navbar-text-color);">Empowering learners & educators.</p>
+    </div>
+
+    <!-- Middle section: Quick links -->
+    <div class="flex space-x-6">
+      <a href="{% url 'home' %}" class="text-sm hover:underline" style="color: var(--navbar-text-color);">Home</a>
+      <a href="{% url 'login' %}" class="text-sm hover:underline" style="color: var(--navbar-text-color);">Login</a>
+      <a href="{% url 'register' %}" class="text-sm hover:underline" style="color: var(--navbar-text-color);">Register</a>
+    </div>
+
+    <!-- Right section -->
+    <div class="text-sm" style="color: var(--navbar-text-color);">
+      © {{ now|date:"Y" }} LMS. All rights reserved.
+    </div>
+
+  </div>
+</footer>
