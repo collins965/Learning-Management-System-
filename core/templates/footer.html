@@ -1,3 +1,4 @@
+{% if not request.user.is_authenticated %}
 <footer class="py-6 mt-12 shadow-inner transition-colors duration-300"
         style="background-color: var(--navbar-color); color: var(--navbar-text-color);">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
@@ -22,3 +23,4 @@
 
   </div>
 </footer>
+{% endif %}

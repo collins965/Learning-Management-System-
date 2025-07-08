@@ -1,27 +1,38 @@
+/* === PURPLE THEME === */
 [data-theme="purple"] {
-  --bg-color: #ccc1fd;
-  --card-color: #f5f3ff;
-  --bg-section: #e9d5ff;
-  --text-color: #3b0764;
+  --bg-color: #e9dcff;
+  --card-color: #f6f2ff;
+  --bg-section: #e4ccff;
+  --text-color: #2e1065;
   --accent-color: #8b5cf6;
   --accent-strong: #7c3aed;
-  --navbar-color: #6d28d9;
+  --navbar-color: #5b21b6;
   --navbar-text-color: #f3e8ff;
+  --sidebar-color: #6d28d9;
+  --sidebar-border-color: #4c1d95;
+  --sidebar-hover-bg: #7c3aed;
+  --sidebar-text-muted: #ddd6fe;
 }
 
+/* === PINK THEME === */
 [data-theme="pink"] {
-  --bg-color: #ffddea;
-  --card-color: #ffe4ee;
-  --bg-section: #fcd5e8;
+  --bg-color: #ffe4f0;
+  --card-color: #fff0f5;
+  --bg-section: #fed7e2;
   --text-color: #831843;
   --accent-color: #ec4899;
-  --accent-strong: #db2777;
+  --accent-strong: #be185d;
   --navbar-color: #be185d;
   --navbar-text-color: #fff0f5;
+  --sidebar-color: #db2777;
+  --sidebar-border-color: #9d174d;
+  --sidebar-hover-bg: #f472b6;
+  --sidebar-text-muted: #fbcfe8;
 }
 
+/* === LAVENDER THEME === */
 [data-theme="lavender"] {
-  --bg-color: #cdc2ff;
+  --bg-color: #ede9fe;
   --card-color: #f3e8ff;
   --bg-section: #e9d5ff;
   --text-color: #4c1d95;
@@ -29,19 +40,29 @@
   --accent-strong: #8b5cf6;
   --navbar-color: #7c3aed;
   --navbar-text-color: #ede9fe;
+  --sidebar-color: #6d28d9;
+  --sidebar-border-color: #5b21b6;
+  --sidebar-hover-bg: #8b5cf6;
+  --sidebar-text-muted: #ddd6fe;
 }
 
+/* === DARK THEME === */
 [data-theme="dark"] {
-  --bg-color: #111827;
-  --card-color: #1f2937;
-  --bg-section: #1e293b;
+  --bg-color: #0f172a;
+  --card-color: #1e293b;
+  --bg-section: #1c2534;
   --text-color: #f9fafb;
   --accent-color: #2563eb;
   --accent-strong: #1d4ed8;
   --navbar-color: #0f172a;
   --navbar-text-color: #f8fafc;
+  --sidebar-color: #1e1e2f;
+  --sidebar-border-color: #334155;
+  --sidebar-hover-bg: #27364a;
+  --sidebar-text-muted: #94a3b8;
 }
 
+/* === LIGHT THEME === */
 [data-theme="light"] {
   --bg-color: #ffffff;
   --card-color: #f9fafb;
@@ -51,22 +72,32 @@
   --accent-strong: #1e40af;
   --navbar-color: #f8fafc;
   --navbar-text-color: #1f2937;
+  --sidebar-color: #e5e7eb;
+  --sidebar-border-color: #cbd5e1;
+  --sidebar-hover-bg: #dbeafe;
+  --sidebar-text-muted: #6b7280;
 }
 
+/* === OCEAN THEME === */
 [data-theme="ocean"] {
-  --bg-color: #e0f7fa;
+  --bg-color: #d0f2f5;
   --card-color: #b2ebf2;
-  --bg-section: #b2ebf2;
-  --text-color: #004d40;
+  --bg-section: #a0e4eb;
+  --text-color: #00332e;
   --accent-color: #00acc1;
   --accent-strong: #00838f;
   --hero-color: #006064;
   --navbar-color: #004d40;
   --navbar-text-color: #e0f7fa;
+  --sidebar-color: #006064;
+  --sidebar-border-color: #00acc1;
+  --sidebar-hover-bg: #0097a7;
+  --sidebar-text-muted: #b2ebf2;
 }
 
+/* === FROST THEME === */
 [data-theme="frost"] {
-  --bg-color: #f0f9ff;
+  --bg-color: #e0f7ff;
   --card-color: #e0f2fe;
   --bg-section: #bae6fd;
   --text-color: #0c4a6e;
@@ -75,8 +106,13 @@
   --hero-color: #0284c7;
   --navbar-color: #0284c7;
   --navbar-text-color: #f0f9ff;
+  --sidebar-color: #0284c7;
+  --sidebar-border-color: #0369a1;
+  --sidebar-hover-bg: #0ea5e9;
+  --sidebar-text-muted: #cce7ff;
 }
 
+/* === EARTH THEME === */
 [data-theme="earth"] {
   --bg-color: #fefae0;
   --card-color: #f9f5d7;
@@ -87,8 +123,13 @@
   --hero-color: #3a5a40;
   --navbar-color: #3a5a40;
   --navbar-text-color: #fefae0;
+  --sidebar-color: #4f6f52;
+  --sidebar-border-color: #3a5a40;
+  --sidebar-hover-bg: #588157;
+  --sidebar-text-muted: #d4d4aa;
 }
 
+/* === SUNSET THEME === */
 [data-theme="sunset"] {
   --bg-color: #fff7ed;
   --card-color: #ffe5b4;
@@ -99,8 +140,13 @@
   --hero-color: #c2410c;
   --navbar-color: #b45309;
   --navbar-text-color: #fff7ed;
+  --sidebar-color: #e76f51;
+  --sidebar-border-color: #b45309;
+  --sidebar-hover-bg: #fb923c;
+  --sidebar-text-muted: #fed7aa;
 }
 
+/* === SLATE THEME === */
 [data-theme="slate"] {
   --bg-color: #f8fafc;
   --card-color: #e2e8f0;
@@ -111,8 +157,13 @@
   --hero-color: #334155;
   --navbar-color: #1e293b;
   --navbar-text-color: #f8fafc;
+  --sidebar-color: #334155;
+  --sidebar-border-color: #475569;
+  --sidebar-hover-bg: #475569;
+  --sidebar-text-muted: #cbd5e1;
 }
 
+/* === CYBER THEME === */
 [data-theme="cyber"] {
   --bg-color: #0f0f0f;
   --card-color: #1a1a1a;
@@ -123,4 +174,8 @@
   --hero-color: #0d0d0d;
   --navbar-color: #1a1a1a;
   --navbar-text-color: #00f0ff;
+  --sidebar-color: #121212;
+  --sidebar-border-color: #2a2a2a;
+  --sidebar-hover-bg: #222222;
+  --sidebar-text-muted: #999999;
 }

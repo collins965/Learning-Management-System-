@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Quiz - {{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold text-[var(--accent-color)] mb-6">{{ quiz.title }}</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {% for question in quiz.questions.all %}
+      <div class="mb-6">
+        <h2 class="font-semibold mb-2">{{ forloop.counter }}. {{ question.text }}</h2>
+        {% for choice in question.choices.all %}
+          <label class="block ml-4">
+            <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}" class="mr-2">
+            {{ choice.text }}
+          </label>
+        {% endfor %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="px-6 py-2 bg-[var(--accent-color)] text-white rounded hover:bg-[var(--accent-strong)] transition">
+      Submit Quiz
+    </button>
+  </form>
+
+  {% if quiz.course and quiz.course.id %}
+    <a href="{% url 'course_detail' quiz.course.id %}" class="inline-block mt-6 text-[var(--accent-color)] hover:underline">
+      ← Back to Course
+    </a>
+  {% else %}
+    <p class="mt-6 italic text-gray-500">No associated course found for this quiz.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="flex flex-col h-screen bg-[var(--background-color)] transition-colors duration-300">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-10 px-6 py-4 border-b border-gray-200 bg-[var(--card-color)] flex justify-between items-center">
+    <div>
+      <h2 class="text-xl font-semibold text-[var(--text-color)]">
+        {{ group.name }}
+        {% if group.is_private %}
+          <span class="text-sm text-gray-500">(Private)</span>
+        {% endif %}
+      </h2>
+      <p class="text-sm text-gray-500">Members: {{ group.members.count }}</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- View Members Button -->
+      <button onclick="toggleModal('memberModal')" class="text-sm px-3 py-1 rounded-full bg-[var(--accent-color)] text-white hover:opacity-90">
+        View Members
+      </button>
+
+      {% if is_group_admin %}
+        <!-- Manage Group Button -->
+        <a href="{% url 'chat:manage_group' group.id %}" class="text-sm px-3 py-1 rounded-full border border-[var(--accent-color)] text-[var(--accent-color)] hover:bg-[var(--accent-color)] hover:text-white transition">
+          Manage Group
+        </a>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- Messages -->
+  <div id="message-container" class="flex-1 overflow-y-auto px-4 py-3 space-y-4">
+    {% for message in messages %}
+      <div class="flex {% if message.sender == request.user %}justify-end{% else %}justify-start{% endif %}">
+        <div class="max-w-xs md:max-w-md px-4 py-2 rounded-2xl shadow-md text-sm leading-relaxed
+                    {% if message.sender == request.user %}
+                      bg-blue-600 text-white rounded-br-none
+                    {% else %}
+                      bg-gray-200 text-gray-800 rounded-bl-none
+                    {% endif %}">
+          <div class="font-semibold mb-1">{{ message.sender.username }}</div>
+          <div>{{ message.content }}</div>
+          <div class="mt-1 text-xs text-gray-400 {% if message.sender != request.user %}text-right{% endif %}">
+            {{ message.timestamp|naturaltime }}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-center text-sm text-gray-500 mt-10">No messages yet. Start the conversation!</p>
+    {% endfor %}
+  </div>
+
+  <!-- Chat Input -->
+  <form method="POST" class="sticky bottom-0 bg-[var(--card-color)] border-t border-gray-200 px-4 py-3" id="chat-form">
+    {% csrf_token %}
+    <div class="flex items-center gap-3">
+      <textarea
+        name="message"
+        rows="1"
+        id="chat-input"
+        placeholder="Type a message..."
+        class="flex-1 resize-none px-4 py-2 rounded-full border border-gray-300 focus:ring-2
+               focus:ring-[var(--accent-color)] bg-white text-[var(--text-color)] placeholder:text-gray-400
+               max-h-36 overflow-y-auto transition-all duration-200"
+        required
+      ></textarea>
+      <button type="submit" class="px-4 py-2 bg-[var(--accent-color)] text-white rounded-full hover:opacity-90 transition">
+        ➤
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Member List Modal -->
+<div id="memberModal" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50">
+  <div class="bg-white dark:bg-gray-800 rounded-xl w-96 max-w-full p-6">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-semibold text-[var(--text-color)]">Group Members</h3>
+      <button onclick="toggleModal('memberModal')" class="text-gray-500 hover:text-red-500 text-xl font-bold">&times;</button>
+    </div>
+    <ul class="space-y-2 max-h-60 overflow-y-auto">
+      {% for member in group.members.all %}
+        <li class="flex justify-between items-center px-2 py-1 rounded bg-[var(--hover-background)] text-[var(--text-color)]">
+          <span>{{ member.username }}</span>
+          {% if member in group.admins.all %}
+            <span class="text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">Admin</span>
+          {% endif %}
+        </li>
+      {% empty %}
+        <li class="text-sm text-gray-500">No members yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const textarea = document.getElementById('chat-input');
+  const form = document.getElementById('chat-form');
+  const messageContainer = document.getElementById('message-container');
+
+  // Auto-scroll to bottom
+  messageContainer.scrollTop = messageContainer.scrollHeight;
+
+  // Auto-grow textarea
+  textarea.addEventListener('input', () => {
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  });
+
+  // Enter to submit, Shift+Enter for newline
+  textarea.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      form.submit();
+    }
+  });
+
+  function toggleModal(id) {
+    const modal = document.getElementById(id);
+    modal.classList.toggle("hidden");
+    modal.classList.toggle("flex");
+  }
+</script>
+{% endblock %}

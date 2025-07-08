@@ -9,20 +9,38 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
+
+class Lesson(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    video_url = models.URLField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.course.title})"
+
+
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=15, blank=True)
 
     def __str__(self):
         return self.user.username
 
+
 class Enrollment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    enrolled_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('student', 'course')
+    enrolled_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.student} -> {self.course}"
+
+class Quiz(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='quizzes')
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

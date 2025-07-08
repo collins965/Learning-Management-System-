@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Lesson - {{ lesson.title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-[var(--accent-color)] mb-4">{{ lesson.title }}</h1>
+
+  <div class="prose dark:prose-invert max-w-none mb-6">
+    {{ lesson.content|linebreaks }}
+  </div>
+
+  <a href="{% url 'course_detail' lesson.course.id %}" class="text-[var(--accent-color)] hover:underline">
+    ← Back to Course
+  </a>
+</div>
+{% endblock %}

@@ -1,50 +1,97 @@
-<nav class="shadow-md" style="background-color: var(--navbar-color); color: var(--navbar-text-color);">
+<nav class="shadow-md relative" style="background-color: var(--navbar-color); color: var(--navbar-text-color);">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16 items-center">
+
+      <!-- Sidebar Toggle -->
+      <button id="sidebar-toggle"
+              class="text-2xl mr-4 px-2 py-1 rounded bg-[var(--accent-color)] text-white shadow"
+              title="Toggle sidebar">
+        ☰
+      </button>
 
       <!-- Logo -->
       <div class="flex-shrink-0">
         <a href="{% url 'home' %}" class="text-2xl font-bold" style="color: var(--accent-color);">LMS</a>
       </div>
 
-      <!-- Links -->
-      <div class="hidden md:flex items-center space-x-6">
+      <!-- Desktop Links -->
+      <div class="hidden md:flex items-center space-x-6 ml-auto">
         <a href="{% url 'home' %}" class="font-medium hover:underline" style="color: var(--navbar-text-color);">Home</a>
 
         {% if user.is_authenticated %}
           <a href="{% url 'dashboard' %}" class="font-medium hover:underline" style="color: var(--navbar-text-color);">Dashboard</a>
-          <form method="post" action="{% url 'logout' %}">
+          <a href="{% url 'profile' %}" class="font-medium hover:underline" style="color: var(--navbar-text-color);">Profile</a>
+          <a href="{% url 'chat:user_search' %}" class="font-medium hover:underline" style="color: var(--navbar-text-color);">Search Users</a>
+          <form method="post" action="{% url 'logout' %}" class="inline">
             {% csrf_token %}
-            <button type="submit" class="font-medium hover:underline" style="color: red;">
-              Logout
-            </button>
+            <button type="submit" class="font-medium hover:underline" style="color: red;">Logout</button>
           </form>
         {% else %}
           <a href="{% url 'login' %}" class="font-medium hover:underline" style="color: var(--navbar-text-color);">Login</a>
           <a href="{% url 'register' %}" class="font-medium hover:underline" style="color: var(--accent-color);">Register</a>
         {% endif %}
 
-        <!-- Theme Selector Dropdown -->
+        <!-- Theme Switcher -->
         <select id="theme-selector"
                 class="text-sm px-2 py-1 rounded-md focus:outline-none border border-gray-300"
                 style="background-color: var(--card-color); color: var(--text-color);">
-          <option value="light">🌕 Light</option>
-          <option value="dark">🌑 Dark</option>
-          <option value="pink">🌸 Pink</option>
-          <option value="purple">🟣 Purple</option>
-          <option value="lavender">🌾 Lavender</option>
-          <option value="ocean">🌊 Ocean</option>
-          <option value="frost">❄️ Frost</option>
-          <option value="earth">🌱 Earth</option>
-          <option value="sunset">🌇 Sunset</option>
-          <option value="slate">🪨 Slate</option>
-          <option value="cyber">💿 Cyber</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="pink">Pink</option>
+          <option value="purple">Purple</option>
+          <option value="lavender">Lavender</option>
+          <option value="ocean">Ocean</option>
+          <option value="frost">Frost</option>
+          <option value="earth">Earth</option>
+          <option value="sunset">Sunset</option>
+          <option value="slate">Slate</option>
+          <option value="cyber">Cyber</option>
         </select>
       </div>
 
-      <!-- Mobile toggle (optional) -->
-      <div class="md:hidden">
-        <!-- Add hamburger menu here if needed -->
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden ml-auto">
+        <button id="mobile-menu-toggle" class="text-2xl focus:outline-none">
+          ☰
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden w-full flex justify-end mt-4">
+      <div class="flex flex-col gap-3 items-end ml-auto pr-4">
+
+        <a href="{% url 'home' %}" class="font-medium hover:underline">Home</a>
+
+        {% if user.is_authenticated %}
+          <a href="{% url 'dashboard' %}" class="font-medium hover:underline">Dashboard</a>
+          <a href="{% url 'profile' %}" class="font-medium hover:underline">Profile</a>
+          <a href="{% url 'chat:user_search' %}" class="font-medium hover:underline">Search Users</a>
+          <form method="post" action="{% url 'logout' %}" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="font-medium hover:underline text-red-600">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" class="font-medium hover:underline">Login</a>
+          <a href="{% url 'register' %}" class="font-medium hover:underline text-[var(--accent-color)]">Register</a>
+        {% endif %}
+
+        <!-- Theme Selector -->
+        <select id="theme-selector-mobile"
+                class="text-sm px-2 py-1 rounded-md border border-gray-300"
+                style="background-color: var(--card-color); color: var(--text-color);">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="pink">Pink</option>
+          <option value="purple">Purple</option>
+          <option value="lavender">Lavender</option>
+          <option value="ocean">Ocean</option>
+          <option value="frost">Frost</option>
+          <option value="earth">Earth</option>
+          <option value="sunset">Sunset</option>
+          <option value="slate">Slate</option>
+          <option value="cyber">Cyber</option>
+        </select>
       </div>
     </div>
   </div>

@@ -29,23 +29,75 @@
 <section class="mt-16 grid md:grid-cols-3 gap-8">
     <div class="rounded-xl shadow p-6 hover:shadow-lg transition"
          style="background-color: var(--card-color); color: var(--text-color); border: 1px solid var(--accent-color);">
-        <h2 class="text-xl font-bold mb-2" style="color: var(--accent-color);">📚 Browse Courses</h2>
+        <h2 class="text-xl font-bold mb-2 text-[var(--accent-color)]"> Browse Courses</h2>
         <p>Explore a wide range of topics taught by qualified instructors. Learn at your own pace.</p>
     </div>
     <div class="rounded-xl shadow p-6 hover:shadow-lg transition"
          style="background-color: var(--card-color); color: var(--text-color); border: 1px solid var(--accent-color);">
-        <h2 class="text-xl font-bold mb-2" style="color: var(--accent-color);">📝 Track Progress</h2>
+        <h2 class="text-xl font-bold mb-2 text-[var(--accent-color)]"> Track Progress</h2>
         <p>Easily monitor your learning progress, completed lessons, and achievements.</p>
     </div>
     <div class="rounded-xl shadow p-6 hover:shadow-lg transition"
          style="background-color: var(--card-color); color: var(--text-color); border: 1px solid var(--accent-color);">
-        <h2 class="text-xl font-bold mb-2" style="color: var(--accent-color);">🎓 Certification</h2>
+        <h2 class="text-xl font-bold mb-2 text-[var(--accent-color)]"> Certification</h2>
         <p>Get certified upon course completion and enhance your skills portfolio.</p>
     </div>
 </section>
 
+<!-- Latest Courses Section -->
+{% if courses %}
+<section class="mt-20">
+  <h2 class="text-3xl font-bold text-center mb-10" style="color: var(--accent-color);">Latest Courses</h2>
+  <div class="grid md:grid-cols-3 gap-6">
+    {% for course in courses|slice:":3" %}
+      <div class="bg-[var(--card-color)] border border-[var(--accent-color)] rounded-lg p-5 shadow hover:shadow-lg transition">
+        <h3 class="text-xl font-semibold mb-2 text-[var(--accent-color)]">{{ course.title }}</h3>
+        <p class="text-sm text-gray-500 mb-4">{{ course.description|truncatewords:20 }}</p>
+        <a href="{% url 'course_detail' course.id %}" class="text-sm font-medium text-[var(--accent-color)] hover:underline">
+          View Course →
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- Testimonials Section -->
+<section class="mt-24">
+  <h2 class="text-3xl font-bold text-center mb-10 text-[var(--accent-color)]">What Our Learners Say</h2>
+  <div class="grid md:grid-cols-2 gap-8 text-center">
+    <div class="bg-[var(--card-color)] border border-gray-300 p-6 rounded-lg shadow-md">
+      <p>"This LMS helped me complete a course in web development while working full time!"</p>
+      <span class="block mt-4 font-semibold text-[var(--accent-color)]">– Mary, Developer</span>
+    </div>
+    <div class="bg-[var(--card-color)] border border-gray-300 p-6 rounded-lg shadow-md">
+      <p>"I love the clean UI and the flexibility of learning on my own schedule."</p>
+      <span class="block mt-4 font-semibold text-[var(--accent-color)]">– Kevin, Student</span>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="mt-24 max-w-4xl mx-auto">
+  <h2 class="text-3xl font-bold text-center mb-8 text-[var(--accent-color)]">Frequently Asked Questions</h2>
+  <div class="space-y-4">
+    <details class="bg-[var(--card-color)] p-4 rounded border border-[var(--accent-color)]">
+      <summary class="font-semibold cursor-pointer">Is LMS free to use?</summary>
+      <p class="mt-2 text-sm">Yes! You can register and access free content. Some advanced features may require instructor or admin access.</p>
+    </details>
+    <details class="bg-[var(--card-color)] p-4 rounded border border-[var(--accent-color)]">
+      <summary class="font-semibold cursor-pointer">Can I take multiple courses at once?</summary>
+      <p class="mt-2 text-sm">Absolutely! You can enroll in as many courses as you like.</p>
+    </details>
+    <details class="bg-[var(--card-color)] p-4 rounded border border-[var(--accent-color)]">
+      <summary class="font-semibold cursor-pointer">Do I get a certificate?</summary>
+      <p class="mt-2 text-sm">Yes, once you complete a course, you’ll receive a certificate of completion.</p>
+    </details>
+  </div>
+</section>
+
 <!-- Call to Action -->
-<section class="mt-16 text-center"
+<section class="mt-24 text-center"
          style="background-color: var(--bg-section); color: var(--text-color);">
     <h3 class="text-2xl font-semibold mb-4">Ready to start learning?</h3>
     <a href="{% url 'register' %}"

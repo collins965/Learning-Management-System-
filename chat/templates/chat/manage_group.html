@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-3xl mx-auto p-6 bg-[var(--card-color)] rounded-xl shadow-md mt-8">
+  <h2 class="text-xl font-bold text-[var(--accent-color)] mb-4">Manage Group: {{ group.name }}</h2>
+
+  <h3 class="font-semibold mb-2">Current Members:</h3>
+  <ul class="mb-4">
+    {% for member in members %}
+      <li class="flex justify-between items-center py-1">
+        {{ member.username }}
+        {% if not admins|filter:"id=member.id"|length %}
+          <form method="post" class="inline-block">{% csrf_token %}
+            <input type="hidden" name="user_id" value="{{ member.id }}">
+            <input type="hidden" name="action" value="make_admin">
+            <button class="text-sm text-blue-600 hover:underline">Make Admin</button>
+          </form>
+        {% else %}
+          <span class="text-xs text-gray-400">Admin</span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h3 class="font-semibold mb-2">Add Members:</h3>
+  <ul>
+    {% for user in non_members %}
+      <li class="flex justify-between items-center py-1">
+        {{ user.username }}
+        <form method="post" class="inline-block">{% csrf_token %}
+          <input type="hidden" name="user_id" value="{{ user.id }}">
+          <input type="hidden" name="action" value="add_member">
+          <button class="text-sm text-green-600 hover:underline">Add</button>
+        </form>
+      </li>
+    {% empty %}
+      <li class="text-sm text-gray-400">No users available to add.</li>
+    {% endfor %}
+  </ul>
+
+  <div class="mt-6">
+    <a href="{% url 'chat:group_chat' group.id %}" class="text-sm text-[var(--subtle-text)] hover:underline">← Back to chat</a>
+  </div>
+</div>
+{% endblock %}

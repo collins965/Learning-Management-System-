@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static humanize chat_extras %}
+
+{% block content %}
+<div class="flex h-screen bg-[var(--background-color)] transition-colors duration-300">
+
+  <!-- Sidebar (Scrollable) -->
+  <aside class="w-full md:w-1/3 lg:w-1/4 h-full border-r border-[var(--sidebar-border-color)] bg-[var(--secondary-background)] overflow-y-auto transition-colors">
+
+    <!-- Header -->
+    <div class="p-4 border-b border-[var(--sidebar-border-color)] sticky top-0 bg-[var(--secondary-background)] z-10">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-xl font-bold text-[var(--accent-color)]">Messages</h2>
+        <a href="{% url 'chat:create_group' %}" class="text-sm font-medium text-[var(--accent-color)] hover:underline">+ create group</a>
+      </div>
+
+      <!-- Search -->
+      <form method="GET" action="{% url 'chat:inbox' %}">
+        <input 
+          type="text" 
+          name="q"
+          value="{{ request.GET.q }}"
+          placeholder="Search chats..." 
+          class="w-full px-3 py-2 rounded border border-[var(--sidebar-border-color)] bg-[var(--card-color)] text-sm 
+                 text-[var(--text-color)] placeholder:text-[var(--placeholder-color)] 
+                 focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] transition"
+        />
+      </form>
+    </div>
+
+    <!-- DMs -->
+    <div class="px-4 pt-4">
+      <h3 class="text-xs font-semibold text-[var(--subtle-text)] uppercase mb-2">Direct Messages</h3>
+    </div>
+    <ul class="divide-y divide-[var(--sidebar-border-color)]">
+      {% for group in direct_messages %}
+        <li>
+          <a href="{% url 'chat:group_chat' group.id %}" class="flex items-center gap-3 px-4 py-3 hover:bg-[var(--hover-background)] transition group">
+            <div class="w-10 h-10 rounded-full bg-[var(--accent-color)] text-white flex items-center justify-center font-bold text-sm uppercase">
+              {{ group.other_user.username|slice:":1" }}
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-center">
+                <h4 class="font-semibold text-[var(--text-color)]">{{ group.other_user.username }}</h4>
+                <span class="text-xs text-[var(--subtle-text)]">
+                  {% with last=group.messages.last %}{% if last %}{{ last.timestamp|naturaltime }}{% else %}Now{% endif %}{% endwith %}
+                </span>
+              </div>
+              <div class="flex justify-between items-center">
+                <p class="text-sm text-[var(--subtle-text)] truncate max-w-[170px]">
+                  {% with last=group.messages.last %}
+                    {% if last %}
+                      {{ last.sender.username }}: {{ last.content|truncatechars:40 }}
+                    {% else %}
+                      Start chatting...
+                    {% endif %}
+                  {% endwith %}
+                </p>
+                {% if group_unread_counts|get_item:group.id %}
+                  <span class="text-xs bg-red-500 text-white rounded-full px-2 ml-2">
+                    {{ group_unread_counts|get_item:group.id }}
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+          </a>
+        </li>
+      {% empty %}
+        <li class="text-[var(--subtle-text)] text-sm px-4 py-6 text-center">No direct messages yet.</li>
+      {% endfor %}
+    </ul>
+
+    <!-- Groups -->
+    <div class="px-4 pt-6">
+      <h3 class="text-xs font-semibold text-[var(--subtle-text)] uppercase mb-2">Group Chats</h3>
+    </div>
+    <ul class="divide-y divide-[var(--sidebar-border-color)] mb-8">
+      {% for group in group_chats %}
+        <li>
+          <a href="{% url 'chat:group_chat' group.id %}" class="flex items-center gap-3 px-4 py-3 hover:bg-[var(--hover-background)] transition group">
+            <div class="w-10 h-10 rounded-full bg-[var(--accent-color)] text-white flex items-center justify-center font-bold text-sm uppercase">
+              {{ group.name|slice:":1" }}
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-center">
+                <h4 class="font-semibold text-[var(--text-color)]">{{ group.name }}</h4>
+                <span class="text-xs text-[var(--subtle-text)]">
+                  {% with last=group.messages.last %}{% if last %}{{ last.timestamp|naturaltime }}{% else %}Now{% endif %}{% endwith %}
+                </span>
+              </div>
+              <div class="flex justify-between items-center">
+                <p class="text-sm text-[var(--subtle-text)] truncate max-w-[170px]">
+                  {% with last=group.messages.last %}
+                    {% if last %}
+                      {{ last.sender.username }}: {{ last.content|truncatechars:40 }}
+                    {% else %}
+                      No messages yet.
+                    {% endif %}
+                  {% endwith %}
+                </p>
+                {% if group_unread_counts|get_item:group.id %}
+                  <span class="text-xs bg-red-500 text-white rounded-full px-2 ml-2">
+                    {{ group_unread_counts|get_item:group.id }}
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+          </a>
+        </li>
+      {% empty %}
+        <li class="text-[var(--subtle-text)] text-sm px-4 py-6 text-center">You haven’t joined any groups yet.</li>
+      {% endfor %}
+    </ul>
+  </aside>
+
+  <!-- Learning Dashboard (Independent Scrollable) -->
+  <section class="flex-1 overflow-y-auto p-6 space-y-8">
+
+    <!-- Quick Create -->
+    <div class="flex items-center justify-between">
+      <h2 class="text-2xl font-semibold text-[var(--accent-color)]">Course Dashboard</h2>
+      <div class="flex gap-2">
+        <a href="{% url 'course_create' %}" class="text-sm bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">+ Course</a>
+        <a href="{% url 'lesson_create' %}" class="text-sm bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">+ Lesson</a>
+        <a href="{% url 'quiz_create' %}" class="text-sm bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">+ Quiz</a>
+      </div>
+    </div>
+
+    <!-- Enrolled Courses -->
+    <div>
+      <h3 class="text-lg font-bold text-[var(--text-color)] mb-3">Enrolled Courses</h3>
+      <ul class="space-y-2">
+        {% for enrollment in request.user.student.enrollment_set.all %}
+          <li class="bg-[var(--card-color)] p-4 rounded shadow">
+            <h4 class="text-md font-semibold text-[var(--text-color)]">{{ enrollment.course.title }}</h4>
+            <p class="text-sm text-[var(--subtle-text)]">{{ enrollment.course.description|truncatewords:20 }}</p>
+          </li>
+        {% empty %}
+          <li class="text-sm text-[var(--subtle-text)]">You're not enrolled in any courses.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Your Uploaded Courses -->
+    <div>
+      <h3 class="text-lg font-bold text-[var(--text-color)] mb-3">Your Uploaded Courses</h3>
+      <ul class="space-y-2">
+        {% for course in request.user.course_set.all %}
+          <li class="bg-[var(--card-color)] p-4 rounded shadow">
+            <h4 class="text-md font-semibold text-[var(--text-color)]">{{ course.title }}</h4>
+            <p class="text-sm text-[var(--subtle-text)]">{{ course.description|truncatewords:20 }}</p>
+          </li>
+        {% empty %}
+          <li class="text-sm text-[var(--subtle-text)]">You haven’t created any courses yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Lessons List -->
+    <div>
+      <h3 class="text-lg font-bold text-[var(--text-color)] mb-3">All Lessons</h3>
+      <ul class="space-y-2">
+        {% for lesson in lesson_list %}
+          <li class="bg-[var(--card-color)] p-4 rounded shadow">
+            <h4 class="font-semibold text-[var(--text-color)]">{{ lesson.title }}</h4>
+            <p class="text-sm text-[var(--subtle-text)]">In: {{ lesson.course.title }}</p>
+          </li>
+        {% empty %}
+          <li class="text-sm text-[var(--subtle-text)]">No lessons available yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Quizzes List -->
+    <div>
+      <h3 class="text-lg font-bold text-[var(--text-color)] mb-3">All Quizzes</h3>
+      <ul class="space-y-2">
+        {% for quiz in quiz_list %}
+          <li class="bg-[var(--card-color)] p-4 rounded shadow">
+            <p class="font-semibold text-[var(--text-color)]">{{ quiz.question|truncatewords:10 }}</p>
+            <p class="text-xs text-[var(--subtle-text)]">Lesson: {{ quiz.lesson.title }}</p>
+          </li>
+        {% empty %}
+          <li class="text-sm text-[var(--subtle-text)]">No quizzes available yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+</div>
+{% endblock %}
