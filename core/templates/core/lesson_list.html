@@ -4,13 +4,13 @@
 {% block title %}Create Lessons | LMS{% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
   <!-- Course Info -->
   {% if course %}
-  <div class="mb-8 border-b pb-6">
-    <h1 class="text-3xl font-bold text-[var(--text-color)]">{{ course.title }}</h1>
-    <p class="text-[var(--subtle-text)] mt-2">
+  <div class="mb-10 border-b pb-6">
+    <h1 class="text-2xl sm:text-3xl font-bold text-[var(--text-color)]">{{ course.title }}</h1>
+    <p class="text-sm sm:text-base text-[var(--subtle-text)] mt-2">
       {{ course.description|default:"No course description available." }}
     </p>
     <p class="text-sm text-gray-400 mt-1">
@@ -20,49 +20,61 @@
   {% endif %}
 
   <!-- Create Lesson Form -->
-  <div class="mb-10 bg-[var(--card-color)] p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-semibold text-[var(--accent-color)] mb-4">Add New Lesson</h2>
-    <form method="post">
+  <div class="mb-12 bg-[var(--card-color)] p-6 sm:p-8 rounded-lg shadow-md">
+    <h2 class="text-xl sm:text-2xl font-semibold text-[var(--accent-color)] mb-6">Add New Lesson</h2>
+    <form method="post" class="space-y-5">
       {% csrf_token %}
-      <div class="space-y-4">
 
-        <div>
-          <label for="{{ form.course.id_for_label }}" class="block mb-1 font-semibold text-[var(--text-color)]">Course</label>
-          {{ form.course }}
-        </div>
+      <!-- Course Field -->
+      <div>
+        <label for="{{ form.course.id_for_label }}" class="block text-sm font-semibold text-[var(--text-color)] mb-1">
+          Course
+        </label>
+        {{ form.course }}
+      </div>
 
-        <div>
-          <label for="{{ form.title.id_for_label }}" class="block mb-1 font-semibold text-[var(--text-color)]">Title</label>
-          {{ form.title }}
-        </div>
+      <!-- Title Field -->
+      <div>
+        <label for="{{ form.title.id_for_label }}" class="block text-sm font-semibold text-[var(--text-color)] mb-1">
+          Title
+        </label>
+        {{ form.title }}
+      </div>
 
-        <div>
-          <label for="{{ form.content.id_for_label }}" class="block mb-1 font-semibold text-[var(--text-color)]">Content</label>
-          {{ form.content }}
-        </div>
+      <!-- Content Field -->
+      <div>
+        <label for="{{ form.content.id_for_label }}" class="block text-sm font-semibold text-[var(--text-color)] mb-1">
+          Content
+        </label>
+        {{ form.content }}
+      </div>
 
-        <div>
-          <label for="{{ form.video_url.id_for_label }}" class="block mb-1 font-semibold text-[var(--text-color)]">Video URL (Optional)</label>
-          {{ form.video_url }}
-        </div>
+      <!-- Video URL Field -->
+      <div>
+        <label for="{{ form.video_url.id_for_label }}" class="block text-sm font-semibold text-[var(--text-color)] mb-1">
+          Video URL (Optional)
+        </label>
+        {{ form.video_url }}
+      </div>
 
-        <div class="pt-4">
-          <button type="submit" class="bg-[var(--accent-color)] hover:bg-[var(--accent-strong)] text-white px-6 py-2 rounded-lg font-semibold transition">
-            Add Lesson
-          </button>
-        </div>
+      <!-- Submit Button -->
+      <div class="pt-4">
+        <button type="submit"
+                class="bg-[var(--accent-color)] hover:bg-[var(--accent-strong)] text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 text-sm sm:text-base">
+          Add Lesson
+        </button>
       </div>
     </form>
   </div>
 
   <!-- Lesson List -->
   <div class="space-y-6">
-    <h3 class="text-xl font-bold mb-4 text-[var(--text-color)]">Existing Lessons</h3>
+    <h3 class="text-lg sm:text-xl font-bold mb-4 text-[var(--text-color)]">Existing Lessons</h3>
     {% if lessons %}
       {% for lesson in lessons %}
         <div class="p-5 bg-[var(--card-color)] rounded-lg shadow hover:shadow-lg transition">
           <a href="{% url 'lesson_detail' lesson.id %}" class="block group">
-            <h2 class="text-xl font-semibold text-[var(--accent-color)] group-hover:underline">
+            <h2 class="text-lg sm:text-xl font-semibold text-[var(--accent-color)] group-hover:underline">
               {{ lesson.title }}
             </h2>
             {% if lesson.content %}
@@ -71,20 +83,21 @@
               </p>
             {% endif %}
           </a>
-          <div class="flex items-center justify-between mt-4 text-sm text-gray-500">
+          <div class="flex items-center justify-between mt-3 text-xs sm:text-sm text-gray-500">
             <span>Created {{ lesson.created_at|naturaltime }}</span>
           </div>
         </div>
       {% endfor %}
     {% else %}
-      <p class="text-center text-gray-600 dark:text-gray-300 text-sm">No lessons found for this course.</p>
+      <p class="text-center text-sm text-gray-600 dark:text-gray-300">No lessons found for this course.</p>
     {% endif %}
   </div>
 
-  <!-- Back to course -->
+  <!-- Back to Course Link -->
   {% if course %}
   <div class="mt-10">
-    <a href="{% url 'course_detail' course.id %}" class="inline-block text-[var(--accent-color)] hover:underline text-sm">
+    <a href="{% url 'course_detail' course.id %}"
+       class="inline-block text-[var(--accent-color)] hover:underline text-sm sm:text-base">
       ← Back to Course
     </a>
   </div>

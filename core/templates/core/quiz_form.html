@@ -1,63 +1,63 @@
 {% extends "base.html" %}
 {% load widget_tweaks %}
 
-
 {% block title %}Create Quiz | LMS{% endblock %}
 
 {% block content %}
-<section class="min-h-screen py-12 px-4 bg-[var(--background-color)] transition-colors duration-300">
-  <div class="max-w-3xl mx-auto bg-[var(--card-color)] text-[var(--text-color)] shadow-lg rounded-xl p-8 space-y-8">
+<section class="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-[var(--background-color)] transition-colors duration-300">
+  <div class="max-w-3xl mx-auto bg-[var(--card-color)] text-[var(--text-color)] shadow-lg rounded-xl p-6 sm:p-8 space-y-8">
 
-    <h1 class="text-3xl font-bold text-center text-[var(--accent-color)]">Create a New Quiz</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-center text-[var(--accent-color)]">Create a New Quiz</h1>
 
     <form method="post" class="space-y-6">
       {% csrf_token %}
 
       {% if form.non_field_errors %}
-        <div class="bg-red-100 text-red-700 p-3 rounded">
+        <div class="bg-red-100 text-red-700 dark:bg-red-400/20 dark:text-red-300 p-3 rounded shadow-sm">
           {{ form.non_field_errors }}
         </div>
       {% endif %}
 
       <!-- Quiz Title -->
       <div>
-        <label for="{{ form.title.id_for_label }}" class="block font-medium mb-1">Quiz Title</label>
-        {{ form.title|add_class:"w-full px-4 py-2 rounded-lg border bg-[var(--card-color)] text-[var(--text-color)] border-gray-300 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring transition" }}
+        <label for="{{ form.title.id_for_label }}" class="block font-medium mb-1 text-sm sm:text-base">Quiz Title</label>
+        {{ form.title|add_class:"w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-[var(--card-color)] text-[var(--text-color)] placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring focus:ring-[var(--accent-color)] transition" }}
         {% for error in form.title.errors %}
-          <p class="text-sm text-red-600">{{ error }}</p>
+          <p class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
         {% endfor %}
       </div>
 
       <!-- Related Course -->
       <div>
-        <label for="{{ form.course.id_for_label }}" class="block font-medium mb-1">Course</label>
-        {{ form.course|add_class:"w-full px-4 py-2 rounded-lg border bg-[var(--card-color)] text-[var(--text-color)] border-gray-300 dark:border-gray-600 focus:outline-none focus:ring transition" }}
+        <label for="{{ form.course.id_for_label }}" class="block font-medium mb-1 text-sm sm:text-base">Course</label>
+        {{ form.course|add_class:"w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-[var(--card-color)] text-[var(--text-color)] focus:outline-none focus:ring focus:ring-[var(--accent-color)] transition" }}
         {% for error in form.course.errors %}
-          <p class="text-sm text-red-600">{{ error }}</p>
+          <p class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
         {% endfor %}
       </div>
 
       <!-- Description -->
       <div>
-        <label for="{{ form.description.id_for_label }}" class="block font-medium mb-1">Short Description</label>
-        {{ form.description|add_class:"w-full px-4 py-2 rounded-lg border bg-[var(--card-color)] text-[var(--text-color)] border-gray-300 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring transition" }}
+        <label for="{{ form.description.id_for_label }}" class="block font-medium mb-1 text-sm sm:text-base">Short Description</label>
+        {{ form.description|add_class:"w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-[var(--card-color)] text-[var(--text-color)] placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring focus:ring-[var(--accent-color)] transition" }}
         {% for error in form.description.errors %}
-          <p class="text-sm text-red-600">{{ error }}</p>
+          <p class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
         {% endfor %}
       </div>
 
       <!-- Optional Instructions -->
       <div>
-        <label for="{{ form.instructions.id_for_label }}" class="block font-medium mb-1">Instructions (Optional)</label>
-        {{ form.instructions|add_class:"w-full px-4 py-2 rounded-lg border bg-[var(--card-color)] text-[var(--text-color)] border-gray-300 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring transition" }}
+        <label for="{{ form.instructions.id_for_label }}" class="block font-medium mb-1 text-sm sm:text-base">Instructions (Optional)</label>
+        {{ form.instructions|add_class:"w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-[var(--card-color)] text-[var(--text-color)] placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring focus:ring-[var(--accent-color)] transition" }}
         {% for error in form.instructions.errors %}
-          <p class="text-sm text-red-600">{{ error }}</p>
+          <p class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
         {% endfor %}
       </div>
 
       <!-- Submit Button -->
       <div class="text-right">
-        <button type="submit" class="bg-[var(--accent-color)] hover:bg-[var(--accent-strong)] text-white px-6 py-2 rounded-lg font-semibold transition">
+        <button type="submit"
+                class="bg-[var(--accent-color)] hover:bg-[var(--accent-strong)] text-white px-6 py-2 rounded-lg font-semibold transition duration-300 text-sm sm:text-base">
           Save Quiz
         </button>
       </div>

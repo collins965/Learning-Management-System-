@@ -4,10 +4,10 @@
 {% block title %}Create a New Course{% endblock %}
 
 {% block content %}
-<section class="min-h-screen py-12 px-4 bg-[var(--background-color)] transition-colors duration-300">
-  <div class="max-w-3xl mx-auto bg-[var(--card-color)] text-[var(--text-color)] p-8 rounded-2xl shadow-xl border border-[var(--accent-color)] animate-fade-in">
+<section class="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-[var(--background-color)] transition-colors duration-300">
+  <div class="max-w-3xl mx-auto bg-[var(--card-color)] text-[var(--text-color)] p-6 sm:p-8 rounded-2xl shadow-xl border border-[var(--accent-color)] animate-fade-in">
     
-    <h2 class="text-3xl font-bold mb-6 text-center text-[var(--accent-color)]">Create a New Course</h2>
+    <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center text-[var(--accent-color)]">Create a New Course</h2>
 
     <form method="post" enctype="multipart/form-data" class="space-y-6">
       {% csrf_token %}
@@ -29,13 +29,17 @@
         </div>
       {% endfor %}
 
+      <!-- Thumbnail Preview -->
       <div id="thumbnail-preview" class="hidden mt-4">
         <p class="font-medium text-sm mb-2">Preview:</p>
-        <img id="thumb-output" src="#" alt="Thumbnail Preview" class="rounded-lg w-full h-auto border border-gray-300 dark:border-gray-600" />
+        <img id="thumb-output" src="#" alt="Thumbnail Preview"
+             class="rounded-lg w-full max-h-72 object-cover border border-gray-300 dark:border-gray-600" />
       </div>
 
+      <!-- Submit Button -->
       <div class="pt-4">
-        <button type="submit" class="w-full bg-[var(--accent-color)] hover:bg-[var(--accent-strong)] text-white py-3 rounded-lg font-semibold transition">
+        <button type="submit"
+                class="w-full bg-[var(--accent-color)] hover:bg-[var(--accent-strong)] text-white py-3 rounded-lg font-semibold transition">
           Upload Course
         </button>
       </div>
@@ -43,7 +47,7 @@
   </div>
 </section>
 
-<!-- Animation & Theming Enhancer -->
+<!-- Fade-in animation -->
 <style>
   .animate-fade-in {
     animation: fadeIn 0.5s ease-in-out both;
@@ -54,9 +58,10 @@
   }
 </style>
 
+<!-- Input + Preview Script -->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    // Theme-based input styling
+    // Dynamic input styling
     document.querySelectorAll("input, select, textarea").forEach(el => {
       el.classList.add(
         "w-full", "px-4", "py-2", "rounded-lg", "border", "focus:outline-none", "focus:ring",
@@ -65,7 +70,7 @@
       );
     });
 
-    // Thumbnail preview
+    // Thumbnail preview handler
     const thumbInput = document.getElementById("id_thumbnail");
     const thumbOutput = document.getElementById("thumb-output");
     const previewContainer = document.getElementById("thumbnail-preview");

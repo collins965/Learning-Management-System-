@@ -4,18 +4,18 @@
 
       <!-- Sidebar Toggle -->
       <button id="sidebar-toggle"
-              class="text-2xl mr-4 px-2 py-1 rounded bg-[var(--accent-color)] text-white shadow"
+              class="text-xl sm:text-2xl mr-2 px-2 py-1 rounded bg-[var(--accent-color)] text-white shadow"
               title="Toggle sidebar">
         ☰
       </button>
 
       <!-- Logo -->
       <div class="flex-shrink-0">
-        <a href="{% url 'home' %}" class="text-2xl font-bold" style="color: var(--accent-color);">LMS</a>
+        <a href="{% url 'home' %}" class="text-xl sm:text-2xl font-bold" style="color: var(--accent-color);">LMS</a>
       </div>
 
       <!-- Desktop Links -->
-      <div class="hidden md:flex items-center space-x-6 ml-auto">
+      <div class="hidden md:flex items-center space-x-4 lg:space-x-6 ml-auto text-sm sm:text-base">
         <a href="{% url 'home' %}" class="font-medium hover:underline" style="color: var(--navbar-text-color);">Home</a>
 
         {% if user.is_authenticated %}
@@ -24,7 +24,7 @@
           <a href="{% url 'chat:user_search' %}" class="font-medium hover:underline" style="color: var(--navbar-text-color);">Search Users</a>
           <form method="post" action="{% url 'logout' %}" class="inline">
             {% csrf_token %}
-            <button type="submit" class="font-medium hover:underline" style="color: red;">Logout</button>
+            <button type="submit" class="font-medium hover:underline text-red-500">Logout</button>
           </form>
         {% else %}
           <a href="{% url 'login' %}" class="font-medium hover:underline" style="color: var(--navbar-text-color);">Login</a>
@@ -33,7 +33,7 @@
 
         <!-- Theme Switcher -->
         <select id="theme-selector"
-                class="text-sm px-2 py-1 rounded-md focus:outline-none border border-gray-300"
+                class="text-sm px-2 py-1 rounded-md border border-gray-300 focus:outline-none"
                 style="background-color: var(--card-color); color: var(--text-color);">
           <option value="light">Light</option>
           <option value="dark">Dark</option>
@@ -51,7 +51,7 @@
 
       <!-- Mobile Menu Button -->
       <div class="md:hidden ml-auto">
-        <button id="mobile-menu-toggle" class="text-2xl focus:outline-none">
+        <button id="mobile-menu-toggle" class="text-xl sm:text-2xl focus:outline-none">
           ☰
         </button>
       </div>
@@ -59,7 +59,7 @@
 
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="md:hidden hidden w-full flex justify-end mt-4">
-      <div class="flex flex-col gap-3 items-end ml-auto pr-4">
+      <div class="flex flex-col gap-2 sm:gap-3 items-end ml-auto pr-4 text-sm sm:text-base">
 
         <a href="{% url 'home' %}" class="font-medium hover:underline">Home</a>
 
@@ -69,7 +69,7 @@
           <a href="{% url 'chat:user_search' %}" class="font-medium hover:underline">Search Users</a>
           <form method="post" action="{% url 'logout' %}" class="inline">
             {% csrf_token %}
-            <button type="submit" class="font-medium hover:underline text-red-600">Logout</button>
+            <button type="submit" class="font-medium hover:underline text-red-500">Logout</button>
           </form>
         {% else %}
           <a href="{% url 'login' %}" class="font-medium hover:underline">Login</a>

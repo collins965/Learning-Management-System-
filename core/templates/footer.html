@@ -3,22 +3,24 @@
         style="background-color: var(--navbar-color); color: var(--navbar-text-color);">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
 
-    <!-- Left section -->
+    <!-- Branding -->
     <div class="text-center md:text-left">
-      <h3 class="text-lg font-semibold" style="color: var(--accent-color);">LMS Project</h3>
-      <p class="text-sm" style="color: var(--navbar-text-color);">Empowering learners & educators.</p>
+      <h3 class="text-lg font-bold tracking-wide" style="color: var(--accent-color);">LMS Project</h3>
+      <p class="text-sm mt-1 text-[var(--navbar-text-color)]">Empowering learners & educators worldwide.</p>
     </div>
 
-    <!-- Middle section: Quick links -->
-    <div class="flex space-x-6">
-      <a href="{% url 'home' %}" class="text-sm hover:underline" style="color: var(--navbar-text-color);">Home</a>
-      <a href="{% url 'login' %}" class="text-sm hover:underline" style="color: var(--navbar-text-color);">Login</a>
-      <a href="{% url 'register' %}" class="text-sm hover:underline" style="color: var(--navbar-text-color);">Register</a>
-    </div>
+    <!-- Quick Links -->
+    <nav class="flex flex-wrap justify-center gap-4 text-sm font-medium">
+      <a href="{% url 'home' %}" class="hover:underline" style="color: var(--navbar-text-color);">Home</a>
+      <a href="{% url 'login' %}" class="hover:underline" style="color: var(--navbar-text-color);">Login</a>
+      <a href="{% url 'register' %}" class="hover:underline" style="color: var(--navbar-text-color);">Register</a>
+      <a href="#" class="hover:underline" style="color: var(--navbar-text-color);">About</a>
+      <a href="#" class="hover:underline" style="color: var(--navbar-text-color);">Contact</a>
+    </nav>
 
-    <!-- Right section -->
-    <div class="text-sm" style="color: var(--navbar-text-color);">
-      © {{ now|date:"Y" }} LMS. All rights reserved.
+    <!-- Copyright -->
+    <div class="text-sm text-center md:text-right">
+      <span class="block">&copy; {{ now|date:"Y" }} <strong>LMS</strong>. All rights reserved.</span>
     </div>
 
   </div>

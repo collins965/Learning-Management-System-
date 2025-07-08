@@ -9,40 +9,54 @@
 
     <h2 class="text-2xl font-bold text-center mb-6" style="color: var(--accent-color);">Login to Your Account</h2>
 
-    {% if form.errors %}
+    {% if form.non_field_errors %}
       <div class="px-4 py-2 mb-4 rounded"
            style="background-color: #fee2e2; color: #b91c1c;">
-        <strong>Invalid credentials:</strong> Please check your username and password.
+        <strong>Error:</strong> {{ form.non_field_errors|join:", " }}
       </div>
     {% endif %}
 
     <form method="post" action="{% url 'login' %}" class="space-y-6">
       {% csrf_token %}
 
+      <!-- Username Field -->
       <div>
         <label for="username" class="block mb-1 font-medium">Username</label>
-        <input type="text" name="username" id="username" required
-               class="w-full px-4 py-2 border rounded focus:outline-none focus:ring"
+        <input type="text" name="username" id="username" required placeholder="Enter your username"
+               class="w-full px-4 py-2 border rounded focus:outline-none focus:ring transition"
                style="background-color: var(--bg-color); color: var(--text-color); border-color: var(--accent-color);">
+        {% for error in form.username.errors %}
+          <p class="text-sm text-red-600 mt-1">{{ error }}</p>
+        {% endfor %}
       </div>
 
+      <!-- Password Field -->
       <div>
         <label for="password" class="block mb-1 font-medium">Password</label>
-        <input type="password" name="password" id="password" required
-               class="w-full px-4 py-2 border rounded focus:outline-none focus:ring"
-               style="background-color: var(--bg-color); color: var(--text-color); border-color: var(--accent-color);">
+        <div class="relative">
+          <input type="password" name="password" id="password" required placeholder="••••••••"
+                 class="w-full px-4 py-2 pr-10 border rounded focus:outline-none focus:ring transition"
+                 style="background-color: var(--bg-color); color: var(--text-color); border-color: var(--accent-color);">
+          <button type="button" onclick="togglePassword('password')" class="absolute right-3 top-2 text-sm text-[var(--subtle-text)]">
+            👁️
+          </button>
+        </div>
+        {% for error in form.password.errors %}
+          <p class="text-sm text-red-600 mt-1">{{ error }}</p>
+        {% endfor %}
       </div>
 
+      <!-- Remember Me & Forgot Password -->
       <div class="flex items-center justify-between text-sm">
         <label class="flex items-center gap-2">
-          <input id="remember" name="remember" type="checkbox"
-                 class="rounded border border-gray-400"
+          <input type="checkbox" name="remember" class="rounded border border-gray-400"
                  style="accent-color: var(--accent-color);">
           Remember me
         </label>
-        <a href="#" style="color: var(--accent-color);" class="hover:underline">Forgot password?</a>
+        <a href="#" class="hover:underline" style="color: var(--accent-color);">Forgot password?</a>
       </div>
 
+      <!-- Submit Button -->
       <button type="submit"
               class="w-full py-2 rounded-lg font-semibold transition duration-300"
               style="background-color: var(--accent-color); color: var(--bg-color);">
@@ -50,11 +64,22 @@
       </button>
     </form>
 
+    <!-- Register Link -->
     <p class="mt-6 text-center text-sm">
       Don’t have an account?
-      <a href="{% url 'register' %}" style="color: var(--accent-color);" class="font-semibold hover:underline">Register now</a>
+      <a href="{% url 'register' %}" class="font-semibold hover:underline" style="color: var(--accent-color);">
+        Register now
+      </a>
     </p>
 
   </div>
 </section>
+
+<!-- Toggle Password Script -->
+<script>
+  function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    field.type = field.type === "password" ? "text" : "password";
+  }
+</script>
 {% endblock %}

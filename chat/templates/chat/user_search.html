@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="min-h-screen px-4 py-8 bg-[var(--background-color)] transition-colors duration-300">
+<div class="min-h-screen px-4 py-8 sm:px-6 lg:px-8 bg-[var(--background-color)] transition-colors duration-300">
   <div class="max-w-4xl mx-auto">
-    
+
     <!-- Title -->
-    <h2 class="text-3xl font-bold mb-6 text-[var(--accent-color)] text-center">Search Users</h2>
+    <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-[var(--accent-color)] text-center">
+      Search Users
+    </h2>
 
     <!-- Search Form -->
     <form method="get" class="mb-8 flex justify-center">
@@ -14,11 +16,13 @@
           type="text"
           name="q"
           value="{{ query }}"
-          placeholder=" Search by username..."
-          class="w-full px-4 py-2 pl-10 border border-[var(--sidebar-border-color)] rounded-lg bg-[var(--card-color)] text-[var(--text-color)] placeholder:text-[var(--subtle-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] transition"
+          placeholder="Search by username..."
+          class="w-full px-4 py-2 pl-10 text-sm sm:text-base border border-[var(--sidebar-border-color)] rounded-lg
+                 bg-[var(--card-color)] text-[var(--text-color)] placeholder:text-[var(--subtle-text)]
+                 focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] transition"
         />
         <span class="absolute inset-y-0 left-3 flex items-center text-[var(--subtle-text)]">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2"
                viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
                   d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.75 3.75a7.5 7.5 0 0012.9 12.9z" />
@@ -30,28 +34,31 @@
     <!-- User List -->
     <ul class="space-y-4">
       {% for user in users %}
-        <li class="p-4 border border-[var(--sidebar-border-color)] rounded-lg shadow-sm bg-[var(--secondary-background)] hover:shadow-md transition">
-          <div class="flex items-center justify-between">
+        <li class="p-4 sm:p-5 border border-[var(--sidebar-border-color)] rounded-lg shadow-sm bg-[var(--secondary-background)] hover:shadow-md transition">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
+
             <!-- User Info -->
             <div class="flex items-center gap-4">
               <!-- Avatar -->
-              <div class="w-12 h-12 rounded-full bg-[var(--accent-color)] text-white flex items-center justify-center text-lg font-bold shadow-inner">
+              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[var(--accent-color)] text-white flex items-center justify-center text-base sm:text-lg font-bold shadow-inner">
                 {{ user.username|slice:":1"|upper }}
               </div>
+
               <!-- Username & ID -->
               <div>
-                <p class="font-semibold text-[var(--text-color)]">{{ user.username }}</p>
-                <p class="text-sm text-[var(--subtle-text)]">User ID: {{ user.id }}</p>
+                <p class="font-semibold text-[var(--text-color)] text-sm sm:text-base">{{ user.username }}</p>
+                <p class="text-xs sm:text-sm text-[var(--subtle-text)]">User ID: {{ user.id }}</p>
               </div>
             </div>
 
-            <!-- Chat Button -->
-            <div class="flex items-center gap-2">
-              <!-- (Optional) Online Status Badge -->
-              <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">Online</span>
+            <!-- Chat Button & Status -->
+            <div class="flex items-center justify-between sm:justify-end gap-2 sm:gap-3">
+              <!-- Status -->
+              <span class="text-xs sm:text-sm px-2 py-1 rounded-full bg-green-100 text-green-800">Online</span>
 
+              <!-- Chat -->
               <a href="{% url 'chat:start_chat_with_user' user.id %}"
-                 class="px-4 py-2 text-sm rounded-md bg-[var(--accent-color)] text-white hover:bg-opacity-90 transition">
+                 class="px-4 py-2 text-xs sm:text-sm rounded-md bg-[var(--accent-color)] text-white hover:bg-opacity-90 transition">
                 Chat
               </a>
             </div>

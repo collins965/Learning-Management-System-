@@ -17,13 +17,10 @@
     </div>
 
     <div class="flex items-center gap-3">
-      <!-- View Members Button -->
-      <button onclick="toggleModal('memberModal')" class="text-sm px-3 py-1 rounded-full bg-[var(--accent-color)] text-white hover:opacity-90">
+      <button onclick="toggleModal('memberModal')" class="text-sm px-3 py-1 rounded-full bg-[var(--accent-color)] text-white hover:opacity-90 focus:outline-none">
         View Members
       </button>
-
       {% if is_group_admin %}
-        <!-- Manage Group Button -->
         <a href="{% url 'chat:manage_group' group.id %}" class="text-sm px-3 py-1 rounded-full border border-[var(--accent-color)] text-[var(--accent-color)] hover:bg-[var(--accent-color)] hover:text-white transition">
           Manage Group
         </a>
@@ -49,8 +46,13 @@
         </div>
       </div>
     {% empty %}
-      <p class="text-center text-sm text-gray-500 mt-10">No messages yet. Start the conversation!</p>
+      <p class="text-center text-sm text-gray-500 mt-10">No messages yet. Be the first to say something!</p>
     {% endfor %}
+  </div>
+
+  <!-- Typing Indicator (placeholder only for now) -->
+  <div id="typing-indicator" class="px-6 text-sm text-[var(--subtle-text)] hidden">
+    Someone is typing...
   </div>
 
   <!-- Chat Input -->
@@ -66,8 +68,9 @@
                focus:ring-[var(--accent-color)] bg-white text-[var(--text-color)] placeholder:text-gray-400
                max-h-36 overflow-y-auto transition-all duration-200"
         required
+        autocomplete="off"
       ></textarea>
-      <button type="submit" class="px-4 py-2 bg-[var(--accent-color)] text-white rounded-full hover:opacity-90 transition">
+      <button type="submit" class="px-4 py-2 bg-[var(--accent-color)] text-white rounded-full hover:opacity-90 transition focus:outline-none" aria-label="Send message">
         ➤
       </button>
     </div>
@@ -79,7 +82,7 @@
   <div class="bg-white dark:bg-gray-800 rounded-xl w-96 max-w-full p-6">
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-lg font-semibold text-[var(--text-color)]">Group Members</h3>
-      <button onclick="toggleModal('memberModal')" class="text-gray-500 hover:text-red-500 text-xl font-bold">&times;</button>
+      <button onclick="toggleModal('memberModal')" class="text-gray-500 hover:text-red-500 text-xl font-bold" aria-label="Close modal">&times;</button>
     </div>
     <ul class="space-y-2 max-h-60 overflow-y-auto">
       {% for member in group.members.all %}
@@ -104,7 +107,10 @@
   const messageContainer = document.getElementById('message-container');
 
   // Auto-scroll to bottom
-  messageContainer.scrollTop = messageContainer.scrollHeight;
+  function scrollToBottom() {
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }
+  scrollToBottom();
 
   // Auto-grow textarea
   textarea.addEventListener('input', () => {
@@ -125,5 +131,8 @@
     modal.classList.toggle("hidden");
     modal.classList.toggle("flex");
   }
+
+  // Optional future logic for typing indicator or live status
+  // document.getElementById("typing-indicator").classList.remove("hidden");
 </script>
 {% endblock %}

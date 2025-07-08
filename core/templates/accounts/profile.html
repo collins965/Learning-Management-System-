@@ -2,45 +2,52 @@
 {% block title %}Your Profile{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto px-4 py-10">
-  <h1 class="text-3xl font-bold text-[var(--accent-color)] mb-6">Your Profile</h1>
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <!-- Heading -->
+  <h1 class="text-2xl sm:text-3xl font-bold text-[var(--accent-color)] mb-6">Your Profile</h1>
 
   <!-- Success Message -->
   <div id="success-message" class="hidden text-green-600 font-semibold mb-4"></div>
 
-  <form id="profile-form" class="bg-[var(--card-color)] p-6 rounded-lg shadow-md border border-[var(--accent-color)] space-y-4">
+  <!-- Profile Form -->
+  <form id="profile-form" class="bg-[var(--card-color)] p-5 sm:p-6 rounded-lg shadow-md border border-[var(--accent-color)] space-y-4">
     {% csrf_token %}
+
     <div>
-      <label class="block font-semibold mb-1">Username</label>
+      <label class="block font-semibold text-sm sm:text-base mb-1">Username</label>
       <input type="text" name="username" value="{{ user.username }}" required
-             class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+             class="w-full px-4 py-2 rounded text-sm sm:text-base border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
     </div>
 
     <div>
-      <label class="block font-semibold mb-1">Email</label>
+      <label class="block font-semibold text-sm sm:text-base mb-1">Email</label>
       <input type="email" name="email" value="{{ user.email }}" required
-             class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+             class="w-full px-4 py-2 rounded text-sm sm:text-base border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
     </div>
 
     <div>
-      <label class="block font-semibold mb-1">First Name</label>
+      <label class="block font-semibold text-sm sm:text-base mb-1">First Name</label>
       <input type="text" name="first_name" value="{{ user.first_name }}"
-             class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+             class="w-full px-4 py-2 rounded text-sm sm:text-base border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
     </div>
 
     <div>
-      <label class="block font-semibold mb-1">Last Name</label>
+      <label class="block font-semibold text-sm sm:text-base mb-1">Last Name</label>
       <input type="text" name="last_name" value="{{ user.last_name }}"
-             class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+             class="w-full px-4 py-2 rounded text-sm sm:text-base border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
     </div>
 
-    <button type="submit" class="mt-4 bg-[var(--accent-color)] text-white px-5 py-2 rounded hover:bg-[var(--accent-strong)] transition">
+    <button type="submit"
+            class="mt-4 w-full sm:w-auto text-center bg-[var(--accent-color)] text-white px-5 py-2 rounded text-sm sm:text-base hover:bg-[var(--accent-strong)] transition">
       Save Changes
     </button>
   </form>
 
+  <!-- Password Change -->
   <div class="mt-6">
-    <a href="{% url 'change_password' %}" class="bg-yellow-500 text-white px-5 py-2 rounded hover:bg-yellow-600 transition">
+    <a href="{% url 'change_password' %}"
+       class="inline-block w-full sm:w-auto text-center bg-yellow-500 text-white px-5 py-2 rounded text-sm sm:text-base hover:bg-yellow-600 transition">
       Change Password
     </a>
   </div>
@@ -71,9 +78,12 @@
     if (data.success) {
       successMessage.textContent = "Profile updated successfully!";
       successMessage.classList.remove("hidden");
+      successMessage.classList.remove("text-red-600");
+      successMessage.classList.add("text-green-600");
     } else {
       successMessage.textContent = "Update failed. Try again.";
       successMessage.classList.remove("hidden");
+      successMessage.classList.remove("text-green-600");
       successMessage.classList.add("text-red-600");
     }
   });

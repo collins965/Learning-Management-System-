@@ -4,54 +4,54 @@
 {% block content %}
 
 <!-- Hero Section -->
-<section class="py-20 rounded-lg shadow-lg"
+<section class="py-12 md:py-20 rounded-lg shadow-lg text-center"
          style="background-color: var(--bg-section); color: var(--text-color);">
-    <div class="container mx-auto px-4 text-center">
-        <h1 class="text-5xl font-bold mb-4">Welcome to LMS</h1>
-        <p class="text-lg mb-6 max-w-xl mx-auto">
-            Learn anything, anytime, anywhere. Your personal learning management system is here to empower your education.
-        </p>
-        {% if user.is_authenticated %}
-            <a href="{% url 'dashboard' %}"
-               class="bg-[var(--bg-color)] border border-[var(--accent-color)] text-[var(--accent-color)] font-semibold px-6 py-3 rounded-lg hover:bg-[var(--accent-color)] hover:text-white transition duration-300">
-                Go to Dashboard
-            </a>
-        {% else %}
-            <a href="{% url 'register' %}"
-               class="bg-[var(--bg-color)] border border-[var(--accent-color)] text-[var(--accent-color)] font-semibold px-6 py-3 rounded-lg hover:bg-[var(--accent-color)] hover:text-white transition duration-300">
-                Get Started
-            </a>
-        {% endif %}
-    </div>
+  <div class="container mx-auto px-4">
+    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">Welcome to LMS</h1>
+    <p class="text-base sm:text-lg mb-6 max-w-2xl mx-auto">
+      Learn anything, anytime, anywhere. Your personal learning management system is here to empower your education.
+    </p>
+    {% if user.is_authenticated %}
+      <a href="{% url 'dashboard' %}"
+         class="bg-[var(--bg-color)] border border-[var(--accent-color)] text-[var(--accent-color)] font-semibold px-5 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-[var(--accent-color)] hover:text-white transition duration-300 text-sm sm:text-base">
+        Go to Dashboard
+      </a>
+    {% else %}
+      <a href="{% url 'register' %}"
+         class="bg-[var(--bg-color)] border border-[var(--accent-color)] text-[var(--accent-color)] font-semibold px-5 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-[var(--accent-color)] hover:text-white transition duration-300 text-sm sm:text-base">
+        Get Started
+      </a>
+    {% endif %}
+  </div>
 </section>
 
 <!-- Features Section -->
-<section class="mt-16 grid md:grid-cols-3 gap-8">
-    <div class="rounded-xl shadow p-6 hover:shadow-lg transition"
+<section class="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4">
+  {% for feature in ["Browse Courses", "Track Progress", "Certification"] %}
+    <div class="rounded-xl shadow p-5 sm:p-6 hover:shadow-lg transition text-center"
          style="background-color: var(--card-color); color: var(--text-color); border: 1px solid var(--accent-color);">
-        <h2 class="text-xl font-bold mb-2 text-[var(--accent-color)]"> Browse Courses</h2>
-        <p>Explore a wide range of topics taught by qualified instructors. Learn at your own pace.</p>
+      <h2 class="text-lg sm:text-xl font-bold mb-2 text-[var(--accent-color)]">{{ feature }}</h2>
+      <p class="text-sm sm:text-base">
+        {% if feature == "Browse Courses" %}
+          Explore a wide range of topics taught by qualified instructors. Learn at your own pace.
+        {% elif feature == "Track Progress" %}
+          Easily monitor your learning progress, completed lessons, and achievements.
+        {% elif feature == "Certification" %}
+          Get certified upon course completion and enhance your skills portfolio.
+        {% endif %}
+      </p>
     </div>
-    <div class="rounded-xl shadow p-6 hover:shadow-lg transition"
-         style="background-color: var(--card-color); color: var(--text-color); border: 1px solid var(--accent-color);">
-        <h2 class="text-xl font-bold mb-2 text-[var(--accent-color)]"> Track Progress</h2>
-        <p>Easily monitor your learning progress, completed lessons, and achievements.</p>
-    </div>
-    <div class="rounded-xl shadow p-6 hover:shadow-lg transition"
-         style="background-color: var(--card-color); color: var(--text-color); border: 1px solid var(--accent-color);">
-        <h2 class="text-xl font-bold mb-2 text-[var(--accent-color)]"> Certification</h2>
-        <p>Get certified upon course completion and enhance your skills portfolio.</p>
-    </div>
+  {% endfor %}
 </section>
 
 <!-- Latest Courses Section -->
 {% if courses %}
-<section class="mt-20">
-  <h2 class="text-3xl font-bold text-center mb-10" style="color: var(--accent-color);">Latest Courses</h2>
-  <div class="grid md:grid-cols-3 gap-6">
+<section class="mt-20 px-4">
+  <h2 class="text-2xl sm:text-3xl font-bold text-center mb-10 text-[var(--accent-color)]">Latest Courses</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
     {% for course in courses|slice:":3" %}
       <div class="bg-[var(--card-color)] border border-[var(--accent-color)] rounded-lg p-5 shadow hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold mb-2 text-[var(--accent-color)]">{{ course.title }}</h3>
+        <h3 class="text-lg sm:text-xl font-semibold mb-2 text-[var(--accent-color)]">{{ course.title }}</h3>
         <p class="text-sm text-gray-500 mb-4">{{ course.description|truncatewords:20 }}</p>
         <a href="{% url 'course_detail' course.id %}" class="text-sm font-medium text-[var(--accent-color)] hover:underline">
           View Course →
@@ -63,9 +63,9 @@
 {% endif %}
 
 <!-- Testimonials Section -->
-<section class="mt-24">
-  <h2 class="text-3xl font-bold text-center mb-10 text-[var(--accent-color)]">What Our Learners Say</h2>
-  <div class="grid md:grid-cols-2 gap-8 text-center">
+<section class="mt-24 px-4">
+  <h2 class="text-2xl sm:text-3xl font-bold text-center mb-10 text-[var(--accent-color)]">What Our Learners Say</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
     <div class="bg-[var(--card-color)] border border-gray-300 p-6 rounded-lg shadow-md">
       <p>"This LMS helped me complete a course in web development while working full time!"</p>
       <span class="block mt-4 font-semibold text-[var(--accent-color)]">– Mary, Developer</span>
@@ -78,35 +78,33 @@
 </section>
 
 <!-- FAQ Section -->
-<section class="mt-24 max-w-4xl mx-auto">
-  <h2 class="text-3xl font-bold text-center mb-8 text-[var(--accent-color)]">Frequently Asked Questions</h2>
+<section class="mt-24 max-w-4xl mx-auto px-4">
+  <h2 class="text-2xl sm:text-3xl font-bold text-center mb-8 text-[var(--accent-color)]">Frequently Asked Questions</h2>
   <div class="space-y-4">
-    <details class="bg-[var(--card-color)] p-4 rounded border border-[var(--accent-color)]">
-      <summary class="font-semibold cursor-pointer">Is LMS free to use?</summary>
-      <p class="mt-2 text-sm">Yes! You can register and access free content. Some advanced features may require instructor or admin access.</p>
-    </details>
-    <details class="bg-[var(--card-color)] p-4 rounded border border-[var(--accent-color)]">
-      <summary class="font-semibold cursor-pointer">Can I take multiple courses at once?</summary>
-      <p class="mt-2 text-sm">Absolutely! You can enroll in as many courses as you like.</p>
-    </details>
-    <details class="bg-[var(--card-color)] p-4 rounded border border-[var(--accent-color)]">
-      <summary class="font-semibold cursor-pointer">Do I get a certificate?</summary>
-      <p class="mt-2 text-sm">Yes, once you complete a course, you’ll receive a certificate of completion.</p>
-    </details>
+    {% for question, answer in [
+      ("Is LMS free to use?", "Yes! You can register and access free content. Some advanced features may require instructor or admin access."),
+      ("Can I take multiple courses at once?", "Absolutely! You can enroll in as many courses as you like."),
+      ("Do I get a certificate?", "Yes, once you complete a course, you’ll receive a certificate of completion.")
+    ] %}
+      <details class="bg-[var(--card-color)] p-4 rounded border border-[var(--accent-color)]">
+        <summary class="font-semibold cursor-pointer">{{ question }}</summary>
+        <p class="mt-2 text-sm">{{ answer }}</p>
+      </details>
+    {% endfor %}
   </div>
 </section>
 
 <!-- Call to Action -->
-<section class="mt-24 text-center"
+<section class="mt-24 text-center px-4 py-12 rounded"
          style="background-color: var(--bg-section); color: var(--text-color);">
-    <h3 class="text-2xl font-semibold mb-4">Ready to start learning?</h3>
-    <a href="{% url 'register' %}"
-       class="px-6 py-3 rounded-lg transition duration-300 focus:outline-none focus:ring"
-       style="background-color: var(--accent-color); color: var(--bg-color);"
-       onmouseover="this.style.backgroundColor = '#4338ca'; this.style.color = 'white';"
-       onmouseout="this.style.backgroundColor = 'var(--accent-color)'; this.style.color = 'var(--bg-color)';">
-        Join Now
-    </a>
+  <h3 class="text-xl sm:text-2xl font-semibold mb-4">Ready to start learning?</h3>
+  <a href="{% url 'register' %}"
+     class="px-5 sm:px-6 py-2 sm:py-3 rounded-lg transition duration-300 focus:outline-none focus:ring font-medium text-sm sm:text-base"
+     style="background-color: var(--accent-color); color: var(--bg-color);"
+     onmouseover="this.style.backgroundColor = '#4338ca'; this.style.color = 'white';"
+     onmouseout="this.style.backgroundColor = 'var(--accent-color)'; this.style.color = 'var(--bg-color)';">
+    Join Now
+  </a>
 </section>
 
 {% endblock %}

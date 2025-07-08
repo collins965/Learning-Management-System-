@@ -22,7 +22,7 @@
         <h2 class="text-xl font-bold text-[var(--accent-color)]">Messages</h2>
         <button onclick="toggleChatSidebar('chatSidebar', 'chatOverlay')"
                 class="md:hidden text-base font-medium text-[var(--accent-color)] hover:underline focus:outline-none">
-          ✕ Close
+           Close
         </button>
       </div>
       <form method="GET" action="{% url 'chat:inbox' %}">
@@ -133,17 +133,19 @@
   <section class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8"> 
 
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4"> 
-      <button
-        onclick="toggleChatSidebar('chatSidebar', 'chatOverlay')"
-        class="md:hidden inline-flex items-center gap-2 px-4 py-2 rounded-md
-               bg-[var(--accent-color)] text-[var(--bg-color)] font-semibold text-sm
-               hover:bg-[var(--accent-strong)] transition focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
-        </svg>
-        <span>Open Chats</span>
-      </button>
+<div class="flex justify-end">
+  <button
+    onclick="toggleChatSidebar('chatSidebar', 'chatOverlay')"
+    class="inline-flex items-center gap-1 px-3 py-2 rounded-md
+           bg-[var(--accent-color)] text-[var(--bg-color)] font-semibold text-sm
+           hover:bg-[var(--accent-strong)] transition focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+    </svg>
+    <span>Chats</span>
+  </button>
+</div>
 
       <h2 class="text-xl sm:text-2xl lg:text-3xl font-semibold text-[var(--accent-color)]">Course Dashboard</h2> 
 
@@ -231,7 +233,6 @@
           </li>
         {% empty %}
           <li class="col-span-full text-sm text-[var(--subtle-text)] p-4 text-center">
-            <p class="mb-2 text-4xl">❓</p>
             <p>No quizzes available yet. Create one via '+ Quiz'.</p>
           </li>
         {% endfor %}
@@ -260,18 +261,15 @@
       sidebar.classList.remove('translate-x-0');
       sidebar.classList.add('translate-x-full');
       overlay.classList.add('hidden');
-      document.body.style.overflow = ''; // Re-enable scrolling on main body
+      document.body.style.overflow = ''; 
     } else {
       sidebar.classList.remove('translate-x-full');
       sidebar.classList.add('translate-x-0');
       overlay.classList.remove('hidden');
-      document.body.style.overflow = 'hidden'; // Disable scrolling on main body when chat is open
+      document.body.style.overflow = 'hidden'; 
     }
   }
 
-  // Optional: Close chat sidebar if main sidebar is opened (to prevent conflicts)
-  // This assumes your main sidebar toggle function `toggleSidebar()` is in base.html
-  // and affects an element with id 'sidebar'.
   document.addEventListener('DOMContentLoaded', () => {
     const mainSidebar = document.getElementById('sidebar');
     const chatSidebar = document.getElementById('chatSidebar');
@@ -282,9 +280,9 @@
         const observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
                 if (mutation.attributeName === 'class') {
-                    // If main sidebar is opened (translate-x-0 is removed) and chat sidebar is open
+                    n
                     if (!mainSidebar.classList.contains('-translate-x-full') && chatSidebar.classList.contains('translate-x-0')) {
-                        toggleChatSidebar('chatSidebar', 'chatOverlay'); // Close chat sidebar
+                        toggleChatSidebar('chatSidebar', 'chatOverlay'); 
                     }
                 }
             });

@@ -3,33 +3,34 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<section class="py-12 rounded-lg shadow-lg"
+<section class="py-10 sm:py-12 rounded-lg shadow-lg"
          style="background-color: var(--bg-section); color: var(--text-color);">
-  <div class="max-w-5xl mx-auto px-4">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <h1 class="text-3xl font-bold mb-6">
+    <!-- Welcome -->
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-6">
       Welcome, {{ user.first_name|default:user.username }}
     </h1>
 
     <!-- Enrolled Courses -->
     <div class="mb-12">
-      <h2 class="text-2xl font-semibold mb-3">Your Enrolled Courses</h2>
+      <h2 class="text-xl sm:text-2xl font-semibold mb-4">Your Enrolled Courses</h2>
 
       {% if enrollments %}
-        <div class="grid md:grid-cols-2 gap-6">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {% for enrollment in enrollments %}
-            <div class="rounded-xl p-5 border transition shadow hover:shadow-lg"
+            <div class="rounded-xl p-4 sm:p-5 border transition shadow hover:shadow-lg"
                  style="background-color: var(--card-color); border-color: var(--accent-color);">
-              <h3 class="text-xl font-bold mb-2" style="color: var(--accent-color);">
+              <h3 class="text-lg sm:text-xl font-bold mb-2 text-[var(--accent-color)]">
                 {{ enrollment.course.title }}
               </h3>
-              <p class="text-sm text-gray-400 mb-2">{{ enrollment.course.description|truncatewords:20 }}</p>
+              <p class="text-sm text-gray-400 mb-3">{{ enrollment.course.description|truncatewords:20 }}</p>
               <div class="w-full bg-gray-300 h-2 rounded-full overflow-hidden mb-2">
                 <div class="h-full bg-[var(--accent-color)]" style="width: {{ enrollment.progress|default:20 }}%;"></div>
               </div>
               <span class="text-xs text-gray-500">Progress: {{ enrollment.progress|default:20 }}%</span><br>
               <a href="{% url 'course_detail' enrollment.course.id %}"
-                 class="mt-3 inline-block font-medium hover:underline"
+                 class="mt-3 inline-block font-medium text-sm sm:text-base hover:underline"
                  style="color: var(--accent-color);">
                 View Course →
               </a>
@@ -42,42 +43,43 @@
     </div>
 
     <!-- Quick Stats & Achievements -->
-    <div class="grid md:grid-cols-2 gap-6 mb-12">
+    <div class="grid sm:grid-cols-2 gap-6 mb-12">
       <!-- Profile Summary -->
-      <div class="rounded-xl p-6 shadow-md border border-[var(--accent-color)]"
+      <div class="rounded-xl p-5 sm:p-6 shadow-md border border-[var(--accent-color)]"
            style="background-color: var(--card-color);">
-        <h2 class="text-xl font-semibold mb-2 text-[var(--accent-color)]"> Profile Overview</h2>
+        <h2 class="text-lg sm:text-xl font-semibold mb-2 text-[var(--accent-color)]">Profile Overview</h2>
         <ul class="text-sm text-gray-300 space-y-1">
           <li><strong>Username:</strong> {{ user.username }}</li>
           <li><strong>Email:</strong> {{ user.email }}</li>
           <li><strong>Name:</strong> {{ user.get_full_name|default:"N/A" }}</li>
         </ul>
-        <a href="{% url 'profile' %}" class="text-[var(--accent-color)] mt-3 inline-block font-medium hover:underline">Edit Profile</a>
+        <a href="{% url 'profile' %}" class="text-[var(--accent-color)] mt-3 inline-block text-sm font-medium hover:underline">Edit Profile</a>
       </div>
 
       <!-- Achievements -->
-      <div class="rounded-xl p-6 shadow-md border border-[var(--accent-color)]"
+      <div class="rounded-xl p-5 sm:p-6 shadow-md border border-[var(--accent-color)]"
            style="background-color: var(--card-color);">
-        <h2 class="text-xl font-semibold mb-2 text-[var(--accent-color)]"> Achievements</h2>
+        <h2 class="text-lg sm:text-xl font-semibold mb-2 text-[var(--accent-color)]">Achievements</h2>
         <ul class="list-disc ml-5 text-sm text-gray-300 space-y-1">
           <li>Completed 3 courses</li>
           <li>Top 10% in Python Bootcamp</li>
-          <li>Daily streak: 5 days </li>
+          <li>Daily streak: 5 days</li>
         </ul>
       </div>
     </div>
 
-    <!-- Actions -->
-    <div class="flex justify-between items-center mt-10">
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row justify-between gap-4 sm:gap-8 mt-10">
       <a href="{% url 'home' %}"
-         class="px-5 py-2 font-semibold rounded transition"
+         class="px-5 py-2 text-center font-semibold rounded transition text-sm sm:text-base"
          style="background-color: var(--accent-color); color: var(--bg-color);"
          onmouseover="this.style.backgroundColor = 'var(--accent-strong)';"
          onmouseout="this.style.backgroundColor = 'var(--accent-color)';">
         Browse Courses
       </a>
+
       <a href="{% url 'logout' %}"
-         class="px-5 py-2 font-semibold rounded transition"
+         class="px-5 py-2 text-center font-semibold rounded transition text-sm sm:text-base"
          style="background-color: #ef4444; color: white;"
          onmouseover="this.style.backgroundColor = '#dc2626';"
          onmouseout="this.style.backgroundColor = '#ef4444';">

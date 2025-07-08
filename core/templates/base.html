@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{% static 'core/theme.css' %}">
-  {# You can also add a {% block head_scripts %} here if you have scripts that absolutely must be in the head #}
 </head>
 
 <body style="background-color: var(--bg-color); color: var(--text-color);"
@@ -74,11 +73,9 @@
     toggleBtn?.addEventListener('click', toggleSidebar);
     backdrop?.addEventListener('click', closeSidebar);
 
-    // Close sidebar on clicking content (mobile + desktop)
+    // Close sidebar on clicking content
     mainContent?.addEventListener('click', () => {
       // Only close if it's currently open and not for the chat sidebar
-      // This might be tricky if mainContent overlaps with both sidebars
-      // Consider more specific click outside detection if this causes issues
       if (!sidebar.classList.contains('-translate-x-full') && !isMobile()) {
         closeSidebar();
       }
@@ -131,7 +128,7 @@
     });
   </script>
 
-  {# This is the NEW and CRUCIAL block for specific page scripts #}
+
   {% block scripts %}{% endblock %} 
 
 </body>
