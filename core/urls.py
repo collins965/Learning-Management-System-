@@ -14,8 +14,8 @@ urlpatterns = [
     path('lesson/<int:lesson_id>/', views.lesson_detail, name='lesson_detail'),
     path('lessons/create/', views.lesson_create, name='lesson_create'),
 
-    # ---------------- Quizzes ----------------
-    path('quiz/', views.quiz_page, name='quiz_create'),
+    # ---------------- Quizzes ----------------          
+    path('quiz/create/', views.quiz_create, name='quiz_create'),
 
     # ---------------- Enrollment & Dashboard ----------------
     path('enroll/<int:course_id>/', views.enroll_in_course, name='enroll_course'),

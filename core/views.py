@@ -2,7 +2,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.urls import reverse
 from django.http import JsonResponse
 
 from django.contrib.auth.forms import (
@@ -10,18 +9,16 @@ from django.contrib.auth.forms import (
     UserChangeForm, PasswordChangeForm
 )
 
-from .models import Course, Enrollment, Student, Lesson
-from .forms import CourseForm, LessonForm
+from .models import Course, Enrollment, Student, Lesson, Quiz
+from .forms import CourseForm, LessonForm, QuizForm
 
 # ---------------------- Home ----------------------
 
 def home(request):
-    """Redirects logged-in users to the chat inbox, others to course list"""
     if request.user.is_authenticated:
         return redirect('chat:inbox')
     courses = Course.objects.all()
     return render(request, 'core/home.html', {'courses': courses})
-
 
 # ---------------------- Course Views ----------------------
 
@@ -29,16 +26,14 @@ def course_list(request):
     courses = Course.objects.all()
     return render(request, 'core/course_list.html', {'courses': courses})
 
-
 def course_detail(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     return render(request, 'core/course_detail.html', {'course': course})
 
-
 @login_required
 def course_create(request):
     if request.method == 'POST':
-        form = CourseForm(request.POST)
+        form = CourseForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request, 'Course created successfully.')
@@ -51,12 +46,11 @@ def course_create(request):
         'button_text': 'Create'
     })
 
-
 @login_required
 def course_edit(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     if request.method == 'POST':
-        form = CourseForm(request.POST, instance=course)
+        form = CourseForm(request.POST, request.FILES, instance=course)
         if form.is_valid():
             form.save()
             messages.success(request, 'Course updated successfully.')
@@ -69,7 +63,6 @@ def course_edit(request, course_id):
         'button_text': 'Update'
     })
 
-
 # ---------------------- Lesson Views ----------------------
 
 @login_required
@@ -77,12 +70,10 @@ def lesson_list(request):
     lessons = Lesson.objects.all()
     return render(request, 'core/lesson_list.html', {'lessons': lessons})
 
-
 @login_required
 def lesson_detail(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
     return render(request, 'core/lesson_detail.html', {'lesson': lesson})
-
 
 @login_required
 def lesson_create(request):
@@ -100,13 +91,27 @@ def lesson_create(request):
         'button_text': 'Create'
     })
 
-
-# ---------------------- Quiz Page ----------------------
+# ---------------------- Quiz Views ----------------------
 
 @login_required
 def quiz_page(request):
     return render(request, 'core/quiz.html')
 
+@login_required
+def quiz_create(request):
+    if request.method == 'POST':
+        form = QuizForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Quiz created successfully.')
+            return redirect('dashboard')
+    else:
+        form = QuizForm()
+    return render(request, 'core/quiz_form.html', {
+        'form': form,
+        'form_title': 'Create Quiz',
+        'button_text': 'Create Quiz'
+    })
 
 # ---------------------- Enrollment ----------------------
 
@@ -117,7 +122,6 @@ def enroll_in_course(request, course_id):
     Enrollment.objects.get_or_create(student=student, course=course)
     return redirect('dashboard')
 
-
 # ---------------------- Dashboard ----------------------
 
 @login_required
@@ -125,7 +129,6 @@ def dashboard(request):
     student, _ = Student.objects.get_or_create(user=request.user)
     enrollments = Enrollment.objects.filter(student=student)
     return render(request, 'dashboard.html', {'enrollments': enrollments})
-
 
 # ---------------------- Authentication ----------------------
 
@@ -141,7 +144,6 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'accounts/register.html', {'form': form})
 
-
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -153,11 +155,9 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'accounts/login.html', {'form': form})
 
-
 def logout_view(request):
     logout(request)
     return redirect('home')
-
 
 # ---------------------- Profile & Password ----------------------
 
@@ -174,7 +174,6 @@ def profile_view(request):
         form = UserChangeForm(instance=request.user)
     return render(request, 'accounts/profile.html', {'form': form})
 
-
 @login_required
 def change_password(request):
     if request.method == 'POST':
@@ -187,7 +186,6 @@ def change_password(request):
     else:
         form = PasswordChangeForm(user=request.user)
     return render(request, 'accounts/change_password.html', {'form': form})
-
 
 # ---------------------- AJAX: Live Profile Update ----------------------
 

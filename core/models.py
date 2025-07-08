@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Course(models.Model):
     CATEGORY_CHOICES = [
         ('programming', 'Programming'),
@@ -46,14 +47,15 @@ class Enrollment(models.Model):
     enrolled_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.student} -> {self.course}"
+        return f"{self.student} → {self.course}"
 
 
 class Quiz(models.Model):
+    title = models.CharField(max_length=200)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='quizzes')
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
+    description = models.TextField()
+    instructions = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title
+        return f"{self.title} - {self.course.title}"
