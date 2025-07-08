@@ -1,53 +1,100 @@
-{% extends "base.html" %}
-{% block title %}{{ form_title }} | LMS{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Create Lesson | LMS{% endblock %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto px-4 py-10">
-  <h1 class="text-3xl font-bold text-center mb-6" style="color: var(--accent-color);">
-    {{ form_title }}
-  </h1>
+<section class="min-h-screen flex items-center justify-center bg-[var(--background-color)] transition-colors duration-300">
+  <div class="w-full max-w-2xl p-8 rounded-2xl shadow-xl border border-[var(--accent-color)] bg-[var(--card-color)] text-[var(--text-color)]">
+    
+    <h1 class="text-3xl font-bold mb-6 text-center text-[var(--accent-color)]"> Create New Lesson</h1>
 
-  <form method="post" class="bg-[var(--card-color)] p-6 rounded-xl shadow-md border border-[var(--accent-color)] space-y-5">
-    {% csrf_token %}
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+      {% csrf_token %}
 
-    <div>
-      <label for="course" class="block mb-1 font-semibold text-[var(--text-color)]">Course</label>
-      {{ form.course.as_widget(attrs={
-        "class": "w-full px-4 py-2 border rounded focus:outline-none focus:ring"
-      }) }}
-    </div>
+      {% if form.non_field_errors %}
+        <div class="bg-red-100 dark:bg-red-400/20 text-red-700 dark:text-red-300 p-3 rounded shadow-sm">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
 
-    <div>
-      <label for="title" class="block mb-1 font-semibold text-[var(--text-color)]">Title</label>
-      {{ form.title.as_widget(attrs={
-        "class": "w-full px-4 py-2 border rounded focus:outline-none focus:ring",
-        "placeholder": "Lesson title"
-      }) }}
-    </div>
+      {% for field in form %}
+        <div class="space-y-1">
+          <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-[var(--text-color)]">
+            {{ field.label }}
+          </label>
+          {{ field }}
+          {% if field.help_text %}
+            <p class="text-xs text-[var(--subtle-text)]">{{ field.help_text }}</p>
+          {% endif %}
+          {% for error in field.errors %}
+            <p class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endfor %}
 
-    <div>
-      <label for="content" class="block mb-1 font-semibold text-[var(--text-color)]">Content</label>
-      {{ form.content.as_widget(attrs={
-        "class": "w-full px-4 py-2 border rounded focus:outline-none focus:ring",
-        "rows": "4",
-        "placeholder": "Lesson content"
-      }) }}
-    </div>
+      <!-- Optional Live Video Preview -->
+      <div id="video-preview" class="hidden">
+        <label class="block mb-1 font-semibold text-[var(--text-color)]">🎥 Video Preview</label>
+        <div class="aspect-video border border-[var(--accent-color)] rounded-lg overflow-hidden">
+          <iframe id="video-frame" class="w-full h-full" allowfullscreen></iframe>
+        </div>
+      </div>
 
-    <div>
-      <label for="video_url" class="block mb-1 font-semibold text-[var(--text-color)]">Video URL (Optional)</label>
-      {{ form.video_url.as_widget(attrs={
-        "class": "w-full px-4 py-2 border rounded focus:outline-none focus:ring",
-        "placeholder": "https://example.com/video"
-      }) }}
-    </div>
+      <div class="flex justify-end pt-4">
+        <button type="submit" class="bg-[var(--accent-color)] hover:bg-[var(--accent-strong)] text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300">
+           Publish Lesson
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
 
-    <div class="pt-4 text-center">
-      <button type="submit"
-              class="bg-[var(--accent-color)] hover:bg-[var(--accent-strong)] text-white px-6 py-2 rounded-lg font-semibold transition">
-        {{ button_text|default:"Create Lesson" }}
-      </button>
-    </div>
-  </form>
-</div>
+<!-- Theme & Input Styling Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const themeVars = {
+      background: getComputedStyle(document.documentElement).getPropertyValue('--background-color').trim(),
+      text: getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim(),
+      inputBg: getComputedStyle(document.documentElement).getPropertyValue('--card-color').trim(),
+    };
+
+    // Style inputs based on theme.css variables
+    document.querySelectorAll("input, select, textarea").forEach(el => {
+      el.classList.add(
+        "w-full", "px-4", "py-2", "rounded-lg", "border", "focus:outline-none", "focus:ring",
+        "bg-[var(--card-color)]", "text-[var(--text-color)]", "border-gray-300", "dark:border-gray-600",
+        "placeholder-gray-400", "dark:placeholder-gray-500", "transition"
+      );
+    });
+
+    // Live YouTube video preview logic
+    const videoInput = document.getElementById("id_video_url");
+    const previewContainer = document.getElementById("video-preview");
+    const frame = document.getElementById("video-frame");
+
+    if (videoInput) {
+      videoInput.addEventListener("input", () => {
+        const url = videoInput.value.trim();
+        let embedUrl = "";
+
+        if (url.includes("youtube.com/watch?v=")) {
+          embedUrl = url.replace("watch?v=", "embed/");
+        } else if (url.includes("youtu.be/")) {
+          const videoId = url.split("youtu.be/")[1];
+          embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        } else if (url.includes("vimeo.com/")) {
+          const videoId = url.split("vimeo.com/")[1];
+          embedUrl = `https://player.vimeo.com/video/${videoId}`;
+        }
+
+        if (embedUrl) {
+          frame.src = embedUrl;
+          previewContainer.classList.remove("hidden");
+        } else {
+          frame.src = "";
+          previewContainer.classList.add("hidden");
+        }
+      });
+    }
+  });
+</script>
 {% endblock %}
