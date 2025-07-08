@@ -4,7 +4,7 @@ from .models import Course, Lesson
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['title', 'description']
+        fields = ['title', 'description', 'category', 'thumbnail', 'file']
 
         widgets = {
             'title': forms.TextInput(attrs={
@@ -14,6 +14,15 @@ class CourseForm(forms.ModelForm):
             'description': forms.Textarea(attrs={
                 'class': 'w-full p-2 border border-gray-300 rounded',
                 'placeholder': 'Course Description'
+            }),
+            'category': forms.Select(attrs={
+                'class': 'w-full p-2 border border-gray-300 rounded',
+            }),
+            'thumbnail': forms.ClearableFileInput(attrs={
+                'class': 'w-full p-2 border border-gray-300 rounded',
+            }),
+            'file': forms.ClearableFileInput(attrs={
+                'class': 'w-full p-2 border border-gray-300 rounded',
             }),
         }
 
