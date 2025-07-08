@@ -4,187 +4,295 @@
 {% block content %}
 <div class="flex h-screen bg-[var(--background-color)] transition-colors duration-300">
 
-  <!-- Sidebar (Scrollable) -->
-  <aside class="w-full md:w-1/3 lg:w-1/4 h-full border-r border-[var(--sidebar-border-color)] bg-[var(--secondary-background)] overflow-y-auto transition-colors">
+  <div
+    id="chatOverlay"
+    onclick="toggleChatSidebar('chatSidebar', 'chatOverlay')"
+    class="fixed inset-0 bg-black bg-opacity-100 z-40 hidden md:hidden" {# Full opacity for overlay #}
+  ></div>
 
-    <!-- Header -->
-    <div class="p-4 border-b border-[var(--sidebar-border-color)] sticky top-0 bg-[var(--secondary-background)] z-10">
+  <aside
+    id="chatSidebar"
+    class="fixed md:relative inset-y-0 left-0 z-50 md:z-auto w-full md:w-1/3 lg:w-1/4 xl:w-1/5
+           bg-[var(--card-color)] border-r border-[var(--sidebar-border-color)]
+           transform transition-transform duration-300 translate-x-full md:translate-x-0
+           flex flex-col shadow-lg md:shadow-none" {# Added shadow for better mobile appearance #}
+  >
+    <div class="p-4 border-b border-[var(--sidebar-border-color)] sticky top-0 bg-[var(--card-color)] z-10">
       <div class="flex items-center justify-between mb-2">
         <h2 class="text-xl font-bold text-[var(--accent-color)]">Messages</h2>
-        <a href="{% url 'chat:create_group' %}" class="text-sm font-medium text-[var(--accent-color)] hover:underline">+ create group</a>
+        <button onclick="toggleChatSidebar('chatSidebar', 'chatOverlay')"
+                class="md:hidden text-base font-medium text-[var(--accent-color)] hover:underline focus:outline-none">
+          ✕ Close
+        </button>
       </div>
-
-      <!-- Search -->
       <form method="GET" action="{% url 'chat:inbox' %}">
-        <input 
-          type="text" 
+        <input
+          type="text"
           name="q"
           value="{{ request.GET.q }}"
-          placeholder="Search chats..." 
-          class="w-full px-3 py-2 rounded border border-[var(--sidebar-border-color)] bg-[var(--card-color)] text-sm 
-                 text-[var(--text-color)] placeholder:text-[var(--placeholder-color)] 
-                 focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] transition"
+          placeholder="Search chats..."
+          class="w-full px-3 py-2 rounded-md border border-[var(--sidebar-border-color)] bg-[var(--bg-color)] text-sm
+                         text-[var(--text-color)] placeholder:text-[var(--placeholder-color)]
+                         focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] transition"
         />
       </form>
     </div>
 
-    <!-- DMs -->
-    <div class="px-4 pt-4">
-      <h3 class="text-xs font-semibold text-[var(--subtle-text)] uppercase mb-2">Direct Messages</h3>
-    </div>
-    <ul class="divide-y divide-[var(--sidebar-border-color)]">
-      {% for group in direct_messages %}
-        <li>
-          <a href="{% url 'chat:group_chat' group.id %}" class="flex items-center gap-3 px-4 py-3 hover:bg-[var(--hover-background)] transition group">
-            <div class="w-10 h-10 rounded-full bg-[var(--accent-color)] text-white flex items-center justify-center font-bold text-sm uppercase">
-              {{ group.other_user.username|slice:":1" }}
-            </div>
-            <div class="flex-1">
-              <div class="flex justify-between items-center">
-                <h4 class="font-semibold text-[var(--text-color)]">{{ group.other_user.username }}</h4>
-                <span class="text-xs text-[var(--subtle-text)]">
-                  {% with last=group.messages.last %}{% if last %}{{ last.timestamp|naturaltime }}{% else %}Now{% endif %}{% endwith %}
-                </span>
-              </div>
-              <div class="flex justify-between items-center">
-                <p class="text-sm text-[var(--subtle-text)] truncate max-w-[170px]">
-                  {% with last=group.messages.last %}
-                    {% if last %}
-                      {{ last.sender.username }}: {{ last.content|truncatechars:40 }}
-                    {% else %}
-                      Start chatting...
-                    {% endif %}
-                  {% endwith %}
-                </p>
-                {% if group_unread_counts|get_item:group.id %}
-                  <span class="text-xs bg-red-500 text-white rounded-full px-2 ml-2">
-                    {{ group_unread_counts|get_item:group.id }}
-                  </span>
-                {% endif %}
-              </div>
-            </div>
-          </a>
-        </li>
-      {% empty %}
-        <li class="text-[var(--subtle-text)] text-sm px-4 py-6 text-center">No direct messages yet.</li>
-      {% endfor %}
-    </ul>
+    <div class="flex-1 overflow-y-auto pb-4"> 
 
-    <!-- Groups -->
-    <div class="px-4 pt-6">
-      <h3 class="text-xs font-semibold text-[var(--subtle-text)] uppercase mb-2">Group Chats</h3>
-    </div>
-    <ul class="divide-y divide-[var(--sidebar-border-color)] mb-8">
-      {% for group in group_chats %}
-        <li>
-          <a href="{% url 'chat:group_chat' group.id %}" class="flex items-center gap-3 px-4 py-3 hover:bg-[var(--hover-background)] transition group">
-            <div class="w-10 h-10 rounded-full bg-[var(--accent-color)] text-white flex items-center justify-center font-bold text-sm uppercase">
-              {{ group.name|slice:":1" }}
-            </div>
-            <div class="flex-1">
-              <div class="flex justify-between items-center">
-                <h4 class="font-semibold text-[var(--text-color)]">{{ group.name }}</h4>
-                <span class="text-xs text-[var(--subtle-text)]">
-                  {% with last=group.messages.last %}{% if last %}{{ last.timestamp|naturaltime }}{% else %}Now{% endif %}{% endwith %}
-                </span>
+      <div class="px-4 pt-4">
+        <h3 class="text-xs font-semibold text-[var(--subtle-text)] uppercase mb-2">Direct Messages</h3>
+      </div>
+      <ul class="divide-y divide-[var(--sidebar-border-color)]">
+        {% for group in direct_messages %}
+          <li>
+            <a href="{% url 'chat:group_chat' group.id %}"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-[var(--hover-background)] transition group">
+              <div class="w-10 h-10 rounded-full bg-[var(--accent-color)] text-white flex items-center justify-center font-bold text-sm uppercase flex-shrink-0">
+                {{ group.other_user.username|slice:":1" }}
               </div>
-              <div class="flex justify-between items-center">
-                <p class="text-sm text-[var(--subtle-text)] truncate max-w-[170px]">
-                  {% with last=group.messages.last %}
-                    {% if last %}
-                      {{ last.sender.username }}: {{ last.content|truncatechars:40 }}
-                    {% else %}
-                      No messages yet.
-                    {% endif %}
-                  {% endwith %}
-                </p>
-                {% if group_unread_counts|get_item:group.id %}
-                  <span class="text-xs bg-red-500 text-white rounded-full px-2 ml-2">
-                    {{ group_unread_counts|get_item:group.id }}
+              <div class="flex-1 min-w-0"> 
+                <div class="flex justify-between items-center mb-0.5">
+                  <h4 class="font-semibold text-[var(--text-color)] text-sm md:text-base truncate">{{ group.other_user.username }}</h4>
+                  <span class="text-xs text-[var(--subtle-text)] flex-shrink-0 ml-2">
+                    {% with last=group.messages.last %}{% if last %}{{ last.timestamp|naturaltime }}{% else %}Now{% endif %}{% endwith %}
                   </span>
-                {% endif %}
+                </div>
+                <div class="flex justify-between items-center">
+                  <p class="text-xs md:text-sm text-[var(--subtle-text)] truncate max-w-[calc(100vw-8rem)] md:max-w-full">
+                    {% with last=group.messages.last %}
+                      {% if last %}
+                        {{ last.sender.username }}: {{ last.content|truncatechars:40 }}
+                      {% else %}
+                        Start chatting...
+                      {% endif %}
+                    {% endwith %}
+                  </p>
+                  {% if group_unread_counts|get_item:group.id %}
+                    <span class="text-xs bg-red-500 text-white rounded-full px-2 ml-2 flex-shrink-0">
+                      {{ group_unread_counts|get_item:group.id }}
+                    </span>
+                  {% endif %}
+                </div>
               </div>
-            </div>
-          </a>
-        </li>
-      {% empty %}
-        <li class="text-[var(--subtle-text)] text-sm px-4 py-6 text-center">You haven’t joined any groups yet.</li>
-      {% endfor %}
-    </ul>
+            </a>
+          </li>
+        {% empty %}
+          <li class="text-[var(--subtle-text)] text-sm px-4 py-6 text-center">
+            <p>No direct messages yet. Start a new conversation!</p>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <div class="px-4 pt-6">
+        <h3 class="text-xs font-semibold text-[var(--subtle-text)] uppercase mb-2">Group Chats</h3>
+      </div>
+      <ul class="divide-y divide-[var(--sidebar-border-color)] mb-8">
+        {% for group in group_chats %}
+          <li>
+            <a href="{% url 'chat:group_chat' group.id %}"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-[var(--hover-background)] transition group">
+              <div class="w-10 h-10 rounded-full bg-[var(--accent-color)] text-white flex items-center justify-center font-bold text-sm uppercase flex-shrink-0">
+                {{ group.name|slice:":1" }}
+              </div>
+              <div class="flex-1 min-w-0"> 
+                <div class="flex justify-between items-center mb-0.5">
+                  <h4 class="font-semibold text-[var(--text-color)] text-sm md:text-base truncate">{{ group.name }}</h4>
+                  <span class="text-xs text-[var(--subtle-text)] flex-shrink-0 ml-2">
+                    {% with last=group.messages.last %}{% if last %}{{ last.timestamp|naturaltime }}{% else %}Now{% endif %}{% endwith %}
+                  </span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <p class="text-xs md:text-sm text-[var(--subtle-text)] truncate max-w-[calc(100vw-8rem)] md:max-w-full">
+                    {% with last=group.messages.last %}
+                      {% if last %}
+                        {{ last.sender.username }}: {{ last.content|truncatechars:40 }}
+                      {% else %}
+                        No messages yet.
+                      {% endif %}
+                    {% endwith %}
+                  </p>
+                  {% if group_unread_counts|get_item:group.id %}
+                    <span class="text-xs bg-red-500 text-white rounded-full px-2 ml-2 flex-shrink-0">
+                      {{ group_unread_counts|get_item:group.id }}
+                    </span>
+                  {% endif %}
+                </div>
+              </div>
+            </a>
+          </li>
+        {% empty %}
+          <li class="text-[var(--subtle-text)] text-sm px-4 py-6 text-center">
+            <p>You haven’t joined any groups yet.</p>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
   </aside>
 
-  <!-- Learning Dashboard (Independent Scrollable) -->
-  <section class="flex-1 overflow-y-auto p-6 space-y-8">
+  <section class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8"> 
 
-    <!-- Quick Create -->
-    <div class="flex items-center justify-between">
-      <h2 class="text-2xl font-semibold text-[var(--accent-color)]">Course Dashboard</h2>
-      <div class="flex gap-2">
-        <a href="{% url 'course_create' %}" class="text-sm bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">+ Course</a>
-        <a href="{% url 'lesson_create' %}" class="text-sm bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">+ Lesson</a>
-        <a href="{% url 'quiz_create' %}" class="text-sm bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">+ Quiz</a>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4"> 
+      <button
+        onclick="toggleChatSidebar('chatSidebar', 'chatOverlay')"
+        class="md:hidden inline-flex items-center gap-2 px-4 py-2 rounded-md
+               bg-[var(--accent-color)] text-[var(--bg-color)] font-semibold text-sm
+               hover:bg-[var(--accent-strong)] transition focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+        </svg>
+        <span>Open Chats</span>
+      </button>
+
+      <h2 class="text-xl sm:text-2xl lg:text-3xl font-semibold text-[var(--accent-color)]">Course Dashboard</h2> 
+
+      <div class="flex flex-wrap justify-center sm:justify-end gap-2"> 
+        <a href="{% url 'course_create' %}"
+           class="px-3 py-1 text-xs sm:px-4 sm:py-1 sm:text-sm md:px-5 md:py-2 md:text-base lg:px-6 lg:py-2 font-semibold rounded-md transition
+                  bg-[var(--accent-color)] text-[var(--bg-color)]
+                  hover:bg-[var(--accent-strong)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]">
+          + Course
+        </a>
+        <a href="{% url 'lesson_create' %}"
+           class="px-3 py-1 text-xs sm:px-4 sm:py-1 sm:text-sm md:px-5 md:py-2 md:text-base lg:px-6 lg:py-2 font-semibold rounded-md transition
+                  bg-[var(--accent-color)] text-[var(--bg-color)]
+                  hover:bg-[var(--accent-strong)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]">
+          + Lesson
+        </a>
+        <a href="{% url 'quiz_create' %}"
+           class="px-3 py-1 text-xs sm:px-4 sm:py-1 sm:text-sm md:px-5 md:py-2 md:text-base lg:px-6 lg:py-2 font-semibold rounded-md transition
+                  bg-[var(--accent-color)] text-[var(--bg-color)]
+                  hover:bg-[var(--accent-strong)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]">
+          + Quiz
+        </a>
       </div>
     </div>
 
-    <!-- Enrolled Courses -->
     <div>
-      <h3 class="text-lg font-bold text-[var(--text-color)] mb-3">Enrolled Courses</h3>
-      <ul class="space-y-2">
+      <h3 class="text-base sm:text-lg font-bold text-[var(--text-color)] mb-3">Enrolled Courses</h3> 
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"> 
         {% for enrollment in request.user.student.enrollment_set.all %}
-          <li class="bg-[var(--card-color)] p-4 rounded shadow">
-            <h4 class="text-md font-semibold text-[var(--text-color)]">{{ enrollment.course.title }}</h4>
-            <p class="text-sm text-[var(--subtle-text)]">{{ enrollment.course.description|truncatewords:20 }}</p>
+          <li class="bg-[var(--card-color)] p-4 rounded-lg shadow-md hover:shadow-lg transition cursor-pointer">
+            <h4 class="text-sm sm:text-md font-semibold text-[var(--text-color)] mb-1 truncate">{{ enrollment.course.title }}</h4>
+            <p class="text-xs sm:text-sm text-[var(--subtle-text)] line-clamp-2">{{ enrollment.course.description|truncatewords:20 }}</p>
+            <a href="{% url 'course_detail' enrollment.course.pk %}" class="mt-2 inline-block text-sm text-[var(--accent-color)] hover:underline">View Course</a>
           </li>
         {% empty %}
-          <li class="text-sm text-[var(--subtle-text)]">You're not enrolled in any courses.</li>
+          <li class="col-span-full text-sm text-[var(--subtle-text)] p-4 text-center">
+            <p>You're not enrolled in any courses yet.</p>
+          </li>
         {% endfor %}
       </ul>
     </div>
 
-    <!-- Your Uploaded Courses -->
     <div>
-      <h3 class="text-lg font-bold text-[var(--text-color)] mb-3">Your Uploaded Courses</h3>
-      <ul class="space-y-2">
+      <h3 class="text-base sm:text-lg font-bold text-[var(--text-color)] mb-3">Your Uploaded Courses</h3> {# Responsive heading size #}
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"> {# Responsive grid layout #}
         {% for course in request.user.course_set.all %}
-          <li class="bg-[var(--card-color)] p-4 rounded shadow">
-            <h4 class="text-md font-semibold text-[var(--text-color)]">{{ course.title }}</h4>
-            <p class="text-sm text-[var(--subtle-text)]">{{ course.description|truncatewords:20 }}</p>
+          <li class="bg-[var(--card-color)] p-4 rounded-lg shadow-md hover:shadow-lg transition cursor-pointer">
+            <h4 class="text-sm sm:text-md font-semibold text-[var(--text-color)] mb-1 truncate">{{ course.title }}</h4>
+            <p class="text-xs sm:text-sm text-[var(--subtle-text)] line-clamp-2">{{ course.description|truncatewords:20 }}</p>
+            <a href="{% url 'course_detail' course.pk %}" class="mt-2 inline-block text-sm text-[var(--accent-color)] hover:underline">Manage Course</a>
           </li>
         {% empty %}
-          <li class="text-sm text-[var(--subtle-text)]">You haven’t created any courses yet.</li>
+          <li class="col-span-full text-sm text-[var(--subtle-text)] p-4 text-center">
+            <p>You haven’t created any courses yet.</p>
+          </li>
         {% endfor %}
       </ul>
     </div>
 
-    <!-- Lessons List -->
     <div>
-      <h3 class="text-lg font-bold text-[var(--text-color)] mb-3">All Lessons</h3>
-      <ul class="space-y-2">
+      <h3 class="text-base sm:text-lg font-bold text-[var(--text-color)] mb-3">All Lessons</h3> {# Responsive heading size #}
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"> {# Responsive grid layout #}
         {% for lesson in lesson_list %}
-          <li class="bg-[var(--card-color)] p-4 rounded shadow">
-            <h4 class="font-semibold text-[var(--text-color)]">{{ lesson.title }}</h4>
-            <p class="text-sm text-[var(--subtle-text)]">In: {{ lesson.course.title }}</p>
+          <li class="bg-[var(--card-color)] p-4 rounded-lg shadow-md hover:shadow-lg transition cursor-pointer">
+            <h4 class="font-semibold text-sm sm:text-base text-[var(--text-color)] mb-1 truncate">{{ lesson.title }}</h4>
+            <p class="text-xs sm:text-sm text-[var(--subtle-text)]">In: <span class="font-medium">{{ lesson.course.title }}</span></p>
+            <a href="{% url 'lesson_detail' lesson.pk %}" class="mt-2 inline-block text-sm text-[var(--accent-color)] hover:underline">View Lesson</a>
           </li>
         {% empty %}
-          <li class="text-sm text-[var(--subtle-text)]">No lessons available yet.</li>
+          <li class="col-span-full text-sm text-[var(--subtle-text)] p-4 text-center">
+            <p>No lessons available yet.'.</p>
+          </li>
         {% endfor %}
       </ul>
     </div>
 
-    <!-- Quizzes List -->
     <div>
-      <h3 class="text-lg font-bold text-[var(--text-color)] mb-3">All Quizzes</h3>
-      <ul class="space-y-2">
+      <h3 class="text-base sm:text-lg font-bold text-[var(--text-color)] mb-3">All Quizzes</h3> {# Responsive heading size #}
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"> {# Responsive grid layout #}
         {% for quiz in quiz_list %}
-          <li class="bg-[var(--card-color)] p-4 rounded shadow">
-            <p class="font-semibold text-[var(--text-color)]">{{ quiz.question|truncatewords:10 }}</p>
-            <p class="text-xs text-[var(--subtle-text)]">Lesson: {{ quiz.lesson.title }}</p>
+          <li class="bg-[var(--card-color)] p-4 rounded-lg shadow-md hover:shadow-lg transition cursor-pointer">
+            <p class="font-semibold text-sm sm:text-base text-[var(--text-color)] mb-1 line-clamp-2">{{ quiz.question }}</p>
+            <p class="text-xs sm:text-sm text-[var(--subtle-text)]">Lesson: <span class="font-medium">{{ quiz.lesson.title }}</span></p>
+            <a href="{% url 'quiz_detail' quiz.pk %}" class="mt-2 inline-block text-sm text-[var(--accent-color)] hover:underline">Take Quiz</a>
           </li>
         {% empty %}
-          <li class="text-sm text-[var(--subtle-text)]">No quizzes available yet.</li>
+          <li class="col-span-full text-sm text-[var(--subtle-text)] p-4 text-center">
+            <p class="mb-2 text-4xl">❓</p>
+            <p>No quizzes available yet. Create one via '+ Quiz'.</p>
+          </li>
         {% endfor %}
       </ul>
     </div>
+
   </section>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // This function controls the chat sidebar, separate from the main site sidebar
+  function toggleChatSidebar(sidebarId, overlayId) {
+    const sidebar = document.getElementById(sidebarId);
+    const overlay = document.getElementById(overlayId);
+
+    if (!sidebar || !overlay) {
+      console.warn('Chat Sidebar or overlay element not found. Check IDs and script loading order.');
+      return;
+    }
+
+    const isVisible = sidebar.classList.contains('translate-x-0');
+
+    if (isVisible) {
+      sidebar.classList.remove('translate-x-0');
+      sidebar.classList.add('translate-x-full');
+      overlay.classList.add('hidden');
+      document.body.style.overflow = ''; // Re-enable scrolling on main body
+    } else {
+      sidebar.classList.remove('translate-x-full');
+      sidebar.classList.add('translate-x-0');
+      overlay.classList.remove('hidden');
+      document.body.style.overflow = 'hidden'; // Disable scrolling on main body when chat is open
+    }
+  }
+
+  // Optional: Close chat sidebar if main sidebar is opened (to prevent conflicts)
+  // This assumes your main sidebar toggle function `toggleSidebar()` is in base.html
+  // and affects an element with id 'sidebar'.
+  document.addEventListener('DOMContentLoaded', () => {
+    const mainSidebar = document.getElementById('sidebar');
+    const chatSidebar = document.getElementById('chatSidebar');
+    const chatOverlay = document.getElementById('chatOverlay');
+
+    if (mainSidebar && chatSidebar && chatOverlay) {
+        // Observer for changes to the main sidebar's classes
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                if (mutation.attributeName === 'class') {
+                    // If main sidebar is opened (translate-x-0 is removed) and chat sidebar is open
+                    if (!mainSidebar.classList.contains('-translate-x-full') && chatSidebar.classList.contains('translate-x-0')) {
+                        toggleChatSidebar('chatSidebar', 'chatOverlay'); // Close chat sidebar
+                    }
+                }
+            });
+        });
+
+        observer.observe(mainSidebar, { attributes: true });
+    }
+  });
+
+</script>
 {% endblock %}

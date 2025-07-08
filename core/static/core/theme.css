@@ -12,6 +12,7 @@
   --sidebar-border-color: #4c1d95;
   --sidebar-hover-bg: #7c3aed;
   --sidebar-text-muted: #ddd6fe;
+  --secondary-background: var(--card-color); 
 }
 
 /* === PINK THEME === */
@@ -28,6 +29,7 @@
   --sidebar-border-color: #9d174d;
   --sidebar-hover-bg: #f472b6;
   --sidebar-text-muted: #fbcfe8;
+  --secondary-background: var(--card-color); 
 }
 
 /* === LAVENDER THEME === */
@@ -44,6 +46,7 @@
   --sidebar-border-color: #5b21b6;
   --sidebar-hover-bg: #8b5cf6;
   --sidebar-text-muted: #ddd6fe;
+  --secondary-background: var(--card-color); 
 }
 
 /* === DARK THEME === */
@@ -60,6 +63,7 @@
   --sidebar-border-color: #334155;
   --sidebar-hover-bg: #27364a;
   --sidebar-text-muted: #94a3b8;
+  --secondary-background: var(--card-color); 
 }
 
 /* === LIGHT THEME === */
@@ -76,6 +80,7 @@
   --sidebar-border-color: #cbd5e1;
   --sidebar-hover-bg: #dbeafe;
   --sidebar-text-muted: #6b7280;
+  --secondary-background: var(--card-color); 
 }
 
 /* === OCEAN THEME === */
@@ -93,6 +98,7 @@
   --sidebar-border-color: #00acc1;
   --sidebar-hover-bg: #0097a7;
   --sidebar-text-muted: #b2ebf2;
+  --secondary-background: var(--card-color); 
 }
 
 /* === FROST THEME === */
@@ -110,6 +116,7 @@
   --sidebar-border-color: #0369a1;
   --sidebar-hover-bg: #0ea5e9;
   --sidebar-text-muted: #cce7ff;
+  --secondary-background: var(--card-color); 
 }
 
 /* === EARTH THEME === */
@@ -127,6 +134,7 @@
   --sidebar-border-color: #3a5a40;
   --sidebar-hover-bg: #588157;
   --sidebar-text-muted: #d4d4aa;
+  --secondary-background: var(--card-color); 
 }
 
 /* === SUNSET THEME === */
@@ -144,6 +152,7 @@
   --sidebar-border-color: #b45309;
   --sidebar-hover-bg: #fb923c;
   --sidebar-text-muted: #fed7aa;
+  --secondary-background: var(--card-color); 
 }
 
 /* === SLATE THEME === */
@@ -161,6 +170,7 @@
   --sidebar-border-color: #475569;
   --sidebar-hover-bg: #475569;
   --sidebar-text-muted: #cbd5e1;
+  --secondary-background: var(--card-color); 
 }
 
 /* === CYBER THEME === */
@@ -178,4 +188,5 @@
   --sidebar-border-color: #2a2a2a;
   --sidebar-hover-bg: #222222;
   --sidebar-text-muted: #999999;
+  --secondary-background: var(--card-color); 
 }

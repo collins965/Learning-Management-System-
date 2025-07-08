@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static humanize %}
+
+{% block content %}
+<div class="min-h-screen bg-[var(--background-color)] text-[var(--text-color)] transition-colors duration-300 p-6">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between flex-wrap gap-4 mb-8">
+    <h1 class="text-2xl font-bold">All Quizzes</h1>
+    <a href="{% url 'quiz_create' %}" class="px-4 py-2 text-sm bg-purple-600 text-white rounded shadow hover:bg-purple-700 transition">
+      + Create Quiz
+    </a>
+  </div>
+
+  <!-- Quizzes List -->
+  {% if quizzes %}
+    <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      {% for quiz in quizzes %}
+        <div class="bg-[var(--card-color)] border border-[var(--sidebar-border-color)] rounded-lg shadow-sm p-5 hover:shadow-md transition cursor-pointer">
+          <div class="flex justify-between items-start">
+            <h2 class="text-lg font-semibold text-[var(--text-color)]">{{ quiz.title }}</h2>
+            <span class="text-xs text-[var(--subtle-text)]">{{ quiz.created_at|naturaltime }}</span>
+          </div>
+          <p class="mt-2 text-sm text-[var(--subtle-text)]">
+            {{ quiz.description|truncatewords:20 }}
+          </p>
+          <p class="mt-2 text-xs text-[var(--subtle-text)] italic">
+            Course: {{ quiz.course.title }}
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center text-[var(--subtle-text)] text-sm mt-16">
+      <p>No quizzes available yet. Click "Create Quiz" to add one!</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

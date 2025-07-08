@@ -113,6 +113,17 @@ def quiz_create(request):
         'button_text': 'Create Quiz'
     })
 
+@login_required
+def quiz_list(request):
+    quizzes = Quiz.objects.all().order_by('-created_at')
+    return render(request, 'core/quiz_list.html', {'quizzes': quizzes})
+
+# Optional: Add a quiz detail view if needed
+@login_required
+def quiz_detail(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    return render(request, 'core/quiz_detail.html', {'quiz': quiz})
+
 # ---------------------- Enrollment ----------------------
 
 @login_required
@@ -128,7 +139,13 @@ def enroll_in_course(request, course_id):
 def dashboard(request):
     student, _ = Student.objects.get_or_create(user=request.user)
     enrollments = Enrollment.objects.filter(student=student)
-    return render(request, 'dashboard.html', {'enrollments': enrollments})
+    lessons = Lesson.objects.all()
+    quizzes = Quiz.objects.all()
+    return render(request, 'dashboard.html', {
+        'enrollments': enrollments,
+        'lesson_list': lessons,
+        'quiz_list': quizzes
+    })
 
 # ---------------------- Authentication ----------------------
 

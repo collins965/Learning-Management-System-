@@ -16,6 +16,7 @@ urlpatterns = [
 
     # ---------------- Quizzes ----------------          
     path('quiz/create/', views.quiz_create, name='quiz_create'),
+    path('quiz/<int:pk>/', views.quiz_detail, name='quiz_detail'),
 
     # ---------------- Enrollment & Dashboard ----------------
     path('enroll/<int:course_id>/', views.enroll_in_course, name='enroll_course'),

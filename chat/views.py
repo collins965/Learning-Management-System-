@@ -50,7 +50,7 @@ def inbox(request):
 def group_chat(request, group_id):
     group = get_object_or_404(ChatGroup, id=group_id)
 
-    # Mark messages as read
+    # Mark unread messages as read
     ChatMessage.objects.filter(group=group, is_read=False).exclude(sender=request.user).update(is_read=True)
 
     if request.method == 'POST':
@@ -59,9 +59,10 @@ def group_chat(request, group_id):
             ChatMessage.objects.create(group=group, sender=request.user, content=content)
             return redirect('chat:group_chat', group_id=group.id)
 
+    messages = ChatMessage.objects.filter(group=group).order_by('timestamp')
     return render(request, 'chat/group_chat.html', {
         'group': group,
-        'messages': ChatMessage.objects.filter(group=group).order_by('timestamp'),
+        'messages': messages,
         'is_group_admin': group.is_admin(request.user),
     })
 
@@ -125,13 +126,12 @@ def join_group(request, group_id):
 # -------------------------------
 @login_required
 def browse_groups(request):
-    return render(request, 'chat/browse_groups.html', {
-        'groups': ChatGroup.objects.exclude(members=request.user)
-    })
+    groups = ChatGroup.objects.exclude(members=request.user)
+    return render(request, 'chat/browse_groups.html', {'groups': groups})
 
 
 # -------------------------------
-# User Search (Used in submission)
+# User Search (AJAX or fallback)
 # -------------------------------
 @login_required
 def user_search(request):
@@ -150,6 +150,7 @@ def user_search(request):
 @login_required
 def start_chat_with_user(request, user_id):
     other_user = get_object_or_404(User, id=user_id)
+
     if request.user == other_user:
         return redirect('chat:inbox')
 
@@ -189,7 +190,7 @@ def edit_message(request, message_id):
 
 
 # -------------------------------
-# Quiz Submission Logic
+# Quiz Submission (From Chat Sidebar)
 # -------------------------------
 @login_required
 def submit_quiz(request, quiz_id):
@@ -208,6 +209,7 @@ def submit_quiz(request, quiz_id):
             except User.DoesNotExist:
                 recipient = None
 
+        # Future: Save submission record to DB
         return redirect('course_detail', course_id=quiz.course.id if quiz.course else 1)
 
     return render(request, "core/quiz.html", {"quiz": quiz})

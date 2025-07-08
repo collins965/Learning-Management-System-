@@ -7,42 +7,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{% static 'core/theme.css' %}">
+  {# You can also add a {% block head_scripts %} here if you have scripts that absolutely must be in the head #}
 </head>
 
 <body style="background-color: var(--bg-color); color: var(--text-color);"
       class="transition-colors duration-300 min-h-screen flex flex-col">
 
-  <!-- Navbar -->
   {% include 'navbar.html' %}
 
-  <!-- Main Layout -->
   <div class="flex flex-grow h-screen overflow-hidden">
 
-    <!-- Sidebar -->
     {% include 'sidebar.html' %}
 
-    <!-- Main Content -->
     <main id="main-content"
           class="flex-1 overflow-y-auto p-4 transition-all duration-300">
       {% block content %}{% endblock %}
     </main>
   </div>
 
-  <!-- Backdrop (for mobile) -->
   <div id="sidebar-backdrop"
        class="fixed inset-0 bg-black bg-opacity-30 hidden z-30"
        onclick="closeSidebar()"></div>
 
-  <!-- Footer -->
   {% include 'footer.html' %}
 
-  <!-- Scripts -->
   <script>
     const htmlRoot = document.getElementById('html-root');
     const selector = document.getElementById('theme-selector');
     const icon = document.getElementById('theme-icon');
-    const sidebar = document.getElementById('sidebar');
-    const toggleBtn = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar'); // This is your main site sidebar
+    const toggleBtn = document.getElementById('sidebar-toggle'); // This is for your main site sidebar
     const backdrop = document.getElementById('sidebar-backdrop');
     const mainContent = document.getElementById('main-content');
 
@@ -61,7 +55,7 @@
       if (icon) icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
     });
 
-    function toggleSidebar() {
+    function toggleSidebar() { // This function controls your *main* site sidebar
       const isClosed = sidebar.classList.contains('-translate-x-full');
       sidebar.classList.toggle('-translate-x-full');
       if (isMobile()) {
@@ -71,7 +65,7 @@
       }
     }
 
-    function closeSidebar() {
+    function closeSidebar() { // This function closes your *main* site sidebar
       sidebar.classList.add('-translate-x-full');
       backdrop.classList.add('hidden');
       mainContent.classList.remove('ml-64');
@@ -80,25 +74,29 @@
     toggleBtn?.addEventListener('click', toggleSidebar);
     backdrop?.addEventListener('click', closeSidebar);
 
-    //  Close sidebar on clicking content (mobile + desktop)
+    // Close sidebar on clicking content (mobile + desktop)
     mainContent?.addEventListener('click', () => {
-      if (!sidebar.classList.contains('-translate-x-full')) {
+      // Only close if it's currently open and not for the chat sidebar
+      // This might be tricky if mainContent overlaps with both sidebars
+      // Consider more specific click outside detection if this causes issues
+      if (!sidebar.classList.contains('-translate-x-full') && !isMobile()) {
         closeSidebar();
       }
     });
+
 
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') closeSidebar();
     });
 
-    //  Sidebar always starts closed
+    // Sidebar always starts closed (for the main site sidebar)
     window.addEventListener('DOMContentLoaded', () => {
       sidebar.classList.add('-translate-x-full');
       backdrop.classList.add('hidden');
       mainContent.classList.remove('ml-64');
     });
 
-    //  Handle resize for consistent layout
+    // Handle resize for consistent layout (for the main site sidebar)
     window.addEventListener('resize', () => {
       if (!isMobile()) {
         if (!sidebar.classList.contains('-translate-x-full')) {
@@ -106,22 +104,35 @@
         } else {
           mainContent.classList.remove('ml-64');
         }
+        // Ensure chat sidebar is hidden on desktop if it was open on mobile
+        const chatSidebar = document.getElementById('chatSidebar');
+        const chatOverlay = document.getElementById('chatOverlay');
+        if (chatSidebar && chatOverlay && chatSidebar.classList.contains('translate-x-0')) {
+            chatSidebar.classList.remove('translate-x-0');
+            chatSidebar.classList.add('translate-x-full');
+            chatOverlay.classList.add('hidden');
+        }
+
       } else {
         mainContent.classList.remove('ml-64');
         backdrop.classList.add('hidden');
       }
     });
+
     document.addEventListener("DOMContentLoaded", () => {
-  const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
-  const mobileMenu = document.getElementById("mobile-menu");
+      const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+      const mobileMenu = document.getElementById("mobile-menu");
 
-  if (mobileMenuToggle && mobileMenu) {
-    mobileMenuToggle.addEventListener("click", () => {
-      mobileMenu.classList.toggle("hidden");
+      if (mobileMenuToggle && mobileMenu) {
+        mobileMenuToggle.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+        });
+      }
     });
-  }
-});
-
   </script>
+
+  {# This is the NEW and CRUCIAL block for specific page scripts #}
+  {% block scripts %}{% endblock %} 
+
 </body>
 </html>
